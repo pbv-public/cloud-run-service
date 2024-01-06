@@ -40,7 +40,7 @@ steps:
         "--region",
         "$_REGION",
         "--tag",
-        "sha-$COMMIT_SHA",
+        "sha-$SHORT_SHA",
         "--allow-unauthenticated",
         "--image",
         "$_REGION-docker.pkg.dev/$PROJECT_ID/docker-repo/service-$_SERVICE_NAME:$COMMIT_SHA",
