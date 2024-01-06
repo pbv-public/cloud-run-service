@@ -65,10 +65,6 @@ steps:
         "$SHORT_SHA",
       ]
 
-substitutions:
-  _SERVICE_NAME: api
-  _REGION: us-central1
-
 options:
   logging: CLOUD_LOGGING_ONLY
 
