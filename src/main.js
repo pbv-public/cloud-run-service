@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import { makeAPIService } from './app.js'
+import { makePBVService } from './app.js'
 
 let service
 const project = process.env.PROJECT
@@ -8,7 +8,7 @@ const project = process.env.PROJECT
 const main = async () => {
   verifyEnvironmentVariables()
 
-  service = await makeAPIService(makeCustomizeLoggingOptionsFunction())
+  service = await makePBVService(makeCustomizeLoggingOptionsFunction())
   service.listen({ port: process.env.PORT ?? 8080, host: '0.0.0.0' })
 }
 
