@@ -2,6 +2,7 @@
 .gcloudignore
 .git/
 .gitignore
+.npmrc
 babel.config.cjs
 jest.config.json
 node_modules/
