@@ -1,0 +1,8 @@
+.eslintrc.json
+.gcloudignore
+.git/
+.gitignore
+babel.config.cjs
+jest.config.json
+node_modules/
+service-api.code-workspace

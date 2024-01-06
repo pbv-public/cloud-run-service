@@ -13,9 +13,14 @@ const main = async () => {
 }
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = ['K_REVISION', 'NODE_ENV', 'PROJECT']
+  const requiredEnvKeys = ['K_REVISION', 'PROJECT']
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
+  }
+  if ('K_REVISION' === 'localhost') {
+    process.env.NODE_ENV = 'localhost'
+  } else {
+    process.env.NODE_ENV = project.split('-')[1]
   }
   assert(['localhost', 'dev', 'prod'].indexOf(process.env.NODE_ENV) !== -1,
     `invalid NODE_ENV: ${process.env.NODE_ENV}`)
