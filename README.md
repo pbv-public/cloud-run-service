@@ -1,7 +1,3 @@
-# Service: API
-This is our main API service. It is a public service (i.e., it accepts HTTP
-requests from the Internet).
-
 # Setup
 1. `yarn setup`
 1. Install vscode extensions

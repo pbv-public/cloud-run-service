@@ -1,5 +1,4 @@
 {
-  "name": "@pbvision/service-api",
   "version": "0.0.1",
   "license": "UNLICENSED",
   "type": "module",
@@ -14,10 +13,6 @@
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
     "start-local": "NODE_ENV=localhost FIRESTORE_EMULATOR_HOST=[::1]:8404 K_REVISION=localhost PROJECT=pbv-dev node src/main.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pbv-public/service-api"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
