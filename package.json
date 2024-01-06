@@ -11,7 +11,7 @@
     "debug": "./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
     "setup": "yarn install --frozen-lockfile",
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
-    "start-local": "NODE_ENV=localhost process.env.FIRESTORE_EMULATOR_HOST = '[::1]:8404' node src/server.js",
+    "start-local": "NODE_ENV=localhost FIRESTORE_EMULATOR_HOST=[::1]:8404 K_REVISION=localhost PROJECT=pbv-dev node src/main.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --watch"
   },
   "repository": {
@@ -22,7 +22,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@pbvision/fastify-firestore-service": "^0.0.8"
+    "@pbvision/fastify-firestore-service": "^0.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",
