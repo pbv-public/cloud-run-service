@@ -10,7 +10,7 @@
     "coverage": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --coverage",
     "debug": "./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
     "setup": "yarn install --frozen-lockfile",
-    "start-docker": "docker build . --tag service-api && docker run -p 127.0.0.1:8080:8080/tcp --env K_REVISION=localhost --env PROJECT=pbv-dev service-api:latest",
+    "start-docker": "docker build --build-arg PROJECT=pbv-dev . --tag service-api && docker run -p 127.0.0.1:8080:8080/tcp --env K_REVISION=localhost service-api:latest",
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
     "start-local": "NODE_ENV=localhost FIRESTORE_EMULATOR_HOST=[::1]:8404 K_REVISION=localhost PROJECT=pbv-dev node src/main.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --watch"

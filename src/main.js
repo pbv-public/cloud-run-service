@@ -3,12 +3,12 @@ import assert from 'node:assert'
 import { makeAPIService } from './app.js'
 
 let service
+const project = process.env.PROJECT
 
 const main = async () => {
   verifyEnvironmentVariables()
-  // Start server listening on PORT env var
-  service = await makeAPIService(
-    makeCustomizeLoggingOptionsFunction(process.env.PROJECT))
+
+  service = await makeAPIService(makeCustomizeLoggingOptionsFunction())
   service.listen({ port: process.env.PORT ?? 8080, host: '0.0.0.0' })
 }
 
@@ -26,7 +26,7 @@ function verifyEnvironmentVariables () {
     `invalid NODE_ENV: ${process.env.NODE_ENV}`)
 }
 
-function makeCustomizeLoggingOptionsFunction (project) {
+function makeCustomizeLoggingOptionsFunction () {
   return options => {
     options.formatters = {
       level (label) {

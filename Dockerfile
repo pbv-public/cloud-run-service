@@ -6,6 +6,9 @@ WORKDIR /app
 COPY .npmrc package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production
 
+ARG PROJECT
+ENV PROJECT=${PROJECT}
+
 # copy source files second (after dependencies are installed so rebuilds are
 # super fast whenever only the source code changes)
 COPY src ./src/
