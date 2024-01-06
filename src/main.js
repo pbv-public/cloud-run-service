@@ -17,7 +17,7 @@ function verifyEnvironmentVariables () {
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
   }
-  if ('K_REVISION' === 'localhost') {
+  if (process.env.K_REVISION === 'localhost') {
     process.env.NODE_ENV = 'localhost'
   } else {
     process.env.NODE_ENV = project.split('-')[1]
