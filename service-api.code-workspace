@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"[javascript]": {
+			"editor.formatOnSave": false,
+			"editor.tabSize": 2
+		},
+		"[json]": {
+			"editor.defaultFormatter": "esbenp.prettier-vscode",
+			"editor.formatOnSave": true,
+			"editor.tabSize": 2
+		},
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		"editor.rulers": [
+			79
+		],
+		"eslint.validate": [
+			"javascript"
+		],
+		"files.eol": "\n",
+		"files.trimTrailingWhitespace": true,
+		"files.insertFinalNewline": true,
+		"standard.autoFixOnSave": true,
+		"standard.usePackageJson": true,
+		"cSpell.words": [
+			"esbenp",
+			"fastify",
+			"firestore",
+			"pino"
+		]
+	}
+
+}
