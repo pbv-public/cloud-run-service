@@ -5,7 +5,7 @@ export {
 
 export class AppTest extends BaseAppTest {
   async getMakeServiceFunc () {
-    const { makePBVService } = await import('../src/app.js')
-    return makePBVService
+    const { makeService } = await import('../src/main.js')
+    return makeService
   }
 }
