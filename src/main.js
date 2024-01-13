@@ -1,10 +1,26 @@
 import assert from 'node:assert'
 
+import { API } from '@pbvision/fastify-firestore-service'
+import { GoogleAuth } from 'google-auth-library'
+
 import { makePBVService } from './app.js'
 
 let service
 const project = process.env.PROJECT
+const auth = new GoogleAuth()
 
+// add helper method to call internal APIs with our authorization token
+// istanbul ignore next
+API.prototype.callInternalAPI = async function ({ method = 'POST', headers = {}, url, body, qsParams }) {
+  assert(url.substring(0, 8) === 'https://')
+  const rest = url.substring(8)
+  const hostname = rest.split('/', 1)[0]
+  const targetAudience = `https://${hostname}/`
+  const client = await auth.getIdTokenClient(targetAudience)
+  const token = await client.idTokenProvider.fetchIdToken(targetAudience)
+  headers.Authorization = `Bearer ${token}`
+  return this.callAPI({ method, headers, url, body, qsParams })
+}
 
 export async function makeService () {
   verifyEnvironmentVariables()
