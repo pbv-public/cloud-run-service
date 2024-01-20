@@ -14,7 +14,7 @@
   },
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.fixAll.markdownlint": true
+    "source.fixAll.markdownlint": "explicit"
   },
   "editor.rulers": [79],
   "eslint.validate": ["javascript"],
@@ -29,6 +29,7 @@
     "fastify",
     "firestore",
     "gserviceaccount",
+    "INDEBUGGER",
     "oidc",
     "pino"
   ]

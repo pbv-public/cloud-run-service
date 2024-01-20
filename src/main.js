@@ -6,15 +6,10 @@ let service
 const project = process.env.PROJECT
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = ['GIT_HASH', 'K_REVISION', 'PROJECT', 'REGION', 'SERVICE']
+  const requiredEnvKeys = [
+    'GIT_HASH', 'K_REVISION', 'NODE_ENV', 'PROJECT', 'REGION', 'SERVICE']
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
-  }
-  // istanbul ignore else
-  if (['localhost', 'unittest'].indexOf(process.env.K_REVISION) !== -1) {
-    process.env.NODE_ENV = 'localhost'
-  } else {
-    process.env.NODE_ENV = project.split('-')[1]
   }
   assert(['localhost', 'dev', 'prod'].indexOf(process.env.NODE_ENV) !== -1,
     `invalid NODE_ENV: ${process.env.NODE_ENV}`)

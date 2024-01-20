@@ -25,10 +25,11 @@
     - `GIT_HASH` - the commit from which the current code was generated
     - `K_REVISION` - provided by cloud run (the revision ID)
       - Can be `localhost`
-    - `PROJECT` - the project ID this service is running in
+    - `NODE_ENV`
       - If this is `localhost` then `isLocalhost()` will return true.
-      - If this ends in `-dev` then `isDev()` will return true.
-      - If this ends in `-prod` then `isProd()` will return true.
+      - If this is `dev` then `isDev()` will return true.
+      - If this is `prod` then `isProd()` will return true.
+    - `PROJECT` - the project ID this service is running in
       - Other endings are not allowed.
     - `REGION` - the region this service's cloud run is located in
     - `SERVICE` - the name of this service
@@ -39,5 +40,3 @@
     - `COOKIE_SECRET` - used to sign cookie data (cookies are disabled if omitted)
     - `PORT` - defaults to 8080 if omitted
     - `SENTRY_DSN` - the Sentry URL to report errors to (not used on localhost)
-  - Automatically set this library when `runService()` is called:
-    - `NODE_ENV` - set to localhost, dev or prod
