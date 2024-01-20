@@ -1,10 +1,10 @@
 import { makeService } from '@pbvision/fastify-firestore-service'
 
 import { TestAPI } from './placeholder.js'
-import { isProdEnv } from './utils/utils.js'
+import { isProd } from './utils/utils.js'
 
 export async function makePBVService (customizePinoOpts) {
-  const isProd = isProdEnv()
+  const isProdEnv = isProd()
   return makeService({
     service: 'api',
     components: { TestAPI },
@@ -16,17 +16,17 @@ export async function makePBVService (customizePinoOpts) {
       path: '/_healthcheck'
     },
     latencyTracker: {
-      disabled: isProd
+      disabled: isProdEnv
     },
     logging: {
       customizePinoOpts,
-      reportErrorDetail: !isProd,
+      reportErrorDetail: !isProdEnv,
       reportAllErrors: true,
       sentryDSN: 'https://de6c41e5bf07fd6c04d5bcf26c837f1a@o4506498659254272.ingest.sentry.io/4506498679373824'
     },
     swagger: {
-      disabled: isProd,
       servers: ['http://localhost:8080'],
+      disabled: isProdEnv,
       routePrefix: '/app/docs'
     }
   })
