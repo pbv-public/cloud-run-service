@@ -8,8 +8,13 @@
     "editor.formatOnSave": true,
     "editor.tabSize": 2
   },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.markdownlint": true
   },
   "editor.rulers": [79],
   "eslint.validate": ["javascript"],
@@ -19,6 +24,7 @@
   "standard.autoFixOnSave": true,
   "standard.usePackageJson": true,
   "cSpell.words": [
+    "cloudtasks",
     "esbenp",
     "fastify",
     "firestore",
