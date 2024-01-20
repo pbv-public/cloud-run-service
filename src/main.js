@@ -4,7 +4,7 @@ import { API } from '@pbvision/fastify-firestore-service'
 import { GoogleAuth } from 'google-auth-library'
 
 import { makePBVService } from './app.js'
-import { isLocalhost, isProd } from './utils/utils.js'
+import { getServiceHost } from './utils/utils.js'
 
 let service
 const project = process.env.PROJECT
@@ -15,21 +15,7 @@ const auth = new GoogleAuth()
 // works if this service has been granted access to the target service!)
 // istanbul ignore next
 API.prototype.callServiceAPI = async function ({ method = 'POST', headers = {}, service: serviceName, path, body, qsParams }) {
-  let host
-  if (isLocalhost()) {
-    const port = {
-      api: 9100,
-      'api-internal': 9101,
-      'data-extraction': 9102
-    }[serviceName]
-    assert(port, `unknown service or missing port for localhost ${serviceName}`)
-    host = `localhost:${port}`
-  } else {
-    // TODO: don't have prod host yet
-    const hostSuffix = isProd() ? undefined : '-ko3kowqi6a-uc.a.run.app'
-    host = serviceName + hostSuffix
-  }
-
+  const host = getServiceHost(serviceName)
   const url = `https://${host}${path}`
   const isServiceInternal = serviceName !== 'api'
   if (isServiceInternal) {
