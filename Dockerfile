@@ -8,6 +8,8 @@ RUN yarn install --frozen-lockfile --production
 
 ARG PROJECT
 ENV PROJECT=${PROJECT}
+ARG GIT_HASH
+ENV GIT_HASH=${GIT_HASH}
 
 # copy source files second (after dependencies are installed so rebuilds are
 # super fast whenever only the source code changes)

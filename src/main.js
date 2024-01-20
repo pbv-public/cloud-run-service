@@ -28,7 +28,7 @@ export async function makeService () {
 }
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = ['K_REVISION', 'PROJECT']
+  const requiredEnvKeys = ['GIT_HASH', 'K_REVISION', 'PROJECT']
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
   }
