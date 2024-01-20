@@ -1,10 +1,11 @@
 {
   "version": "0.0.1",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
+  "exports": "./src/main.js",
   "scripts": {
     "coverage": "yarn -s test --coverage",
     "debug": "./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
@@ -15,6 +16,10 @@
     "start-local": "FIRESTORE_EMULATOR_HOST=[::1]:8404 PORT=8080 K_REVISION=localhost PROJECT=pbv-dev GIT_HASH=`git rev-parse HEAD` node src/main.js",
     "test": "PORT=8080 K_REVISION=unittest PROJECT=pbv-dev GIT_HASH=`git rev-parse HEAD` node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
     "watch": "yarn -s test --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pbv-public/cloud-run-service"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
