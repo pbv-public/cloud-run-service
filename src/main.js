@@ -1,36 +1,9 @@
 import assert from 'node:assert'
 
-import { API } from '@pbvision/fastify-firestore-service'
-import { GoogleAuth } from 'google-auth-library'
-
 import { makePBVService } from './app.js'
-import { getServiceHost } from './utils/utils.js'
 
 let service
 const project = process.env.PROJECT
-const auth = new GoogleAuth()
-
-// add helper method to call APIs on this or other services; if the service is
-// internal then we'll make the request with our authorization token (only
-// works if this service has been granted access to the target service!)
-// istanbul ignore next
-API.prototype.callServiceAPI = async function ({ method = 'POST', headers = {}, service: serviceName, path, body, qsParams }) {
-  const host = getServiceHost(serviceName)
-  const url = `https://${host}${path}`
-  const isServiceInternal = serviceName !== 'api'
-  if (isServiceInternal) {
-    const targetAudience = `https://${host}/`
-    const client = await auth.getIdTokenClient(targetAudience)
-    const token = await client.idTokenProvider.fetchIdToken(targetAudience)
-    headers.Authorization = `Bearer ${token}`
-  }
-  return this.callAPI({ method, headers, url, body, qsParams })
-}
-
-export async function makeService () {
-  verifyEnvironmentVariables()
-  return makePBVService(makeCustomizeLoggingOptionsFunction())
-}
 
 function verifyEnvironmentVariables () {
   const requiredEnvKeys = ['GIT_HASH', 'K_REVISION', 'PROJECT', 'REGION']
@@ -76,26 +49,33 @@ function makeCustomizeLoggingOptionsFunction () {
   }
 }
 
+export async function makeService () {
+  verifyEnvironmentVariables()
+  return makePBVService(makeCustomizeLoggingOptionsFunction())
+}
+
 // istanbul ignore next
-if (process.env.K_REVISION !== 'unittest') {
-  // if the instance tells us it will shutdown, try to shut down gracefully (for
-  // example flushing logs)
-  process.on('SIGTERM', () => {
-    if (!service) {
-      return
-    }
-    // cloud run sends SIGTERM 10sec before killing the instance, so give the
-    // instance a little more time to finish any current requests then close
-    // the fastify instance (which kills any remaining requests, and should
-    // flush the logs and other clean up, if time permits)
-    setTimeout(() =>
-      service.close().then(() => {
-        console.log('successfully closed!')
-      }, (err) => {
-        console.log('an error happened', err)
-      }), 7000)
-  })
-  // start the server
-  service = await makeService()
-  service.listen({ port: process.env.PORT ?? 8080, host: '0.0.0.0' })
+export async function runService () {
+  if (process.env.K_REVISION !== 'unittest') {
+    // if the instance tells us it will shutdown, try to shut down gracefully (for
+    // example flushing logs)
+    process.on('SIGTERM', () => {
+      if (!service) {
+        return
+      }
+      // cloud run sends SIGTERM 10sec before killing the instance, so give the
+      // instance a little more time to finish any current requests then close
+      // the fastify instance (which kills any remaining requests, and should
+      // flush the logs and other clean up, if time permits)
+      setTimeout(() =>
+        service.close().then(() => {
+          console.log('successfully closed!')
+        }, (err) => {
+          console.log('an error happened', err)
+        }), 7000)
+    })
+    // start the server
+    service = await makeService()
+    service.listen({ port: process.env.PORT ?? 8080, host: '0.0.0.0' })
+  }
 }

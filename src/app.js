@@ -1,7 +1,7 @@
 import { makeService } from '@pbvision/fastify-firestore-service'
 
 import { TestAPI } from './placeholder.js'
-import { isProd } from './utils/utils.js'
+import { isProd } from './utils.js'
 
 export async function makePBVService (customizePinoOpts) {
   const isProdEnv = isProd()

@@ -1,7 +1,7 @@
 import { API } from '@pbvision/fastify-firestore-service'
 import S from '@pbvision/schema'
 
-import { now } from './utils/utils.js'
+import { now } from './utils.js'
 
 export class TestAPI extends API {
   static METHOD = 'GET'

@@ -5,7 +5,7 @@
   "engines": {
     "node": ">=20"
   },
-  "exports": "./src/main.js",
+  "exports": "./src/index.js",
   "scripts": {
     "coverage": "yarn -s test --coverage",
     "debug": "./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
