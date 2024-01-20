@@ -15,13 +15,15 @@ const tasksClient = new CloudTasksClient()
  * @param {any} payload the data to convert to JSON add send as the task's body
  * @param {string} [name] if provided, a name that is reused (on the same queue)
  *   within about an hour will be rejected (TaskNameAlreadyExistsError)
+ * @param {string} [service="internal"] the service name that the task request
+ *   will be routed to
  * @param {boolean} [ignoreNameAlreadyUsedError=false] if true, no error is
  *   thrown due to a name already having been used
  * @returns {boolean} true if a new task was added; false if the task name was
  *   already recently used (no new task added, but a task was recently added
  *   with this name)
  */
-export async function enqueueCloudTask ({ queue, payload, name, ignoreNameAlreadyUsedError = false }) {
+export async function enqueueCloudTask ({ queue, payload, name, ignoreNameAlreadyUsedError = false, service = 'internal' }) {
   const parent = tasksClient.queuePath(
     process.env.PROJECT, process.env.REGION, queue)
   const task = {
@@ -30,7 +32,7 @@ export async function enqueueCloudTask ({ queue, payload, name, ignoreNameAlread
         'Content-Type': 'application/json'
       },
       httpMethod: 'POST',
-      url: `https://${getServiceHost('internal')}/${queue.replace(/-/g, '_')}`,
+      url: `https://${getServiceHost(service)}/${queue.replace(/-/g, '_')}`,
       body: Buffer.from(JSON.stringify(payload)).toString('base64'),
       oidcToken: {
         serviceAccountEmail: `cr-${process.env.SERVICE}@${process.env.PROJECT}.iam.gserviceaccount.com`

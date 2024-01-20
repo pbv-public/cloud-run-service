@@ -35,7 +35,7 @@
   - Optional:
     - `CLOUD_RUN_HOSTNAME_SUFFIX` - the hostname of our cloud run instances in
       this region, excluding the `SERVICE` name portion at the beginning. Only
-      required if using the `callInternalAPI()` function.
+      required if using the `callServiceAPI()` function.
     - `COOKIE_SECRET` - used to sign cookie data (cookies are disabled if omitted)
     - `PORT` - defaults to 8080 if omitted
     - `SENTRY_DSN` - the Sentry URL to report errors to (not used on localhost)
