@@ -19,9 +19,11 @@
   "standard.autoFixOnSave": true,
   "standard.usePackageJson": true,
   "cSpell.words": [
-	"esbenp",
-	"fastify",
-	"firestore",
-	"pino"
+    "esbenp",
+    "fastify",
+    "firestore",
+    "gserviceaccount",
+    "oidc",
+    "pino"
   ]
 }

@@ -1062,6 +1062,13 @@
     google-gax "^4.3.3"
     protobufjs "^7.2.6"
 
+"@google-cloud/tasks@^4.0.1":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/tasks/-/tasks-4.1.0.tgz#c5905bc76cb0d949cb7b45bff18f155927e52210"
+  integrity sha512-9n6Aw0JZS/c6dqP1wmK9tmzwqayS/E62BM1rOtzDhwYeWhtAhFsdXjCDZZ9+H+kGOrpsLf+4NPIs5lu5mQvapg==
+  dependencies:
+    google-gax "^4.0.4"
+
 "@grpc/grpc-js@^1.10.9":
   version "1.14.3"
   resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.14.3.tgz#4c9b817a900ae4020ddc28515ae4b52c78cfb8da"
@@ -3696,7 +3703,7 @@ google-auth-library@^9.3.0, google-auth-library@^9.4.2:
     gtoken "^7.0.0"
     jws "^4.0.0"
 
-google-gax@^4.3.3:
+google-gax@^4.0.4, google-gax@^4.3.3:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/google-gax/-/google-gax-4.6.1.tgz#57f8e3d893d4c708a71167cdcf47eb3afab95929"
   integrity sha512-V6eky/xz2mcKfAd1Ioxyd6nmA61gao3n01C+YeuIwu3vzM9EDR6wcVzMSIbLMDXWeoi9SHYctXuKYC5uJUT3eQ==
