@@ -1,9 +1,6 @@
 import assert from 'node:assert'
 
-const ALL_SERVICES = new Set(['api', 'internal', 'data-extraction'])
-
 export function getServiceHost (serviceName) {
-  assert(ALL_SERVICES.has(serviceName), `unknown service ${serviceName}`)
   if (isLocalhost()) {
     const port = {
       api: 9100,
@@ -13,9 +10,7 @@ export function getServiceHost (serviceName) {
     assert(port, `unknown service or missing port for localhost ${serviceName}`)
     return `localhost:${port}`
   } else {
-    // TODO: don't have prod host yet
-    const hostSuffix = isProd() ? undefined : '-ko3kowqi6a-uc.a.run.app'
-    return serviceName + hostSuffix
+    return serviceName + process.env.CLOUD_RUN_HOSTNAME_SUFFIX
   }
 }
 
@@ -29,7 +24,7 @@ export function isProd () {
   return process.env.NODE_ENV === 'prod'
 }
 
-export function isTest () {
+export function isDev () {
   assert(process.env.NODE_ENV)
   return process.env.NODE_ENV === 'dev'
 }
