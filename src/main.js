@@ -6,7 +6,7 @@ let service
 const project = process.env.PROJECT
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = ['GIT_HASH', 'K_REVISION', 'PROJECT', 'REGION']
+  const requiredEnvKeys = ['GIT_HASH', 'K_REVISION', 'PROJECT', 'REGION', 'SERVICE']
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
   }

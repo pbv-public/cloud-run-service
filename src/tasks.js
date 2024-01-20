@@ -33,7 +33,7 @@ export async function enqueueCloudTask ({ queue, payload, name, ignoreNameAlread
       url: `https://${getServiceHost('internal')}/${queue.replace(/-/g, '_')}`,
       body: Buffer.from(JSON.stringify(payload)).toString('base64'),
       oidcToken: {
-        serviceAccountEmail: `cr-api@${process.env.PROJECT}.iam.gserviceaccount.com`
+        serviceAccountEmail: `cr-${process.env.SERVICE}@${process.env.PROJECT}.iam.gserviceaccount.com`
       }
     }
   }
