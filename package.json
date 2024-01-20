@@ -11,10 +11,10 @@
     "debug": "./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "setup": "yarn install --frozen-lockfile",
-    "start-docker": "wd=`pwd`; tag=`basename $wd`; docker build --build-arg PROJECT=pbv-dev . --tag $tag && docker run -p 127.0.0.1:8080:8080/tcp --env PORT=8080 --env K_REVISION=localhost --env PROJECT=pbv-dev --env GIT_HASH=`git rev-parse HEAD` $tag:latest",
+    "start-docker": "wd=`pwd`; tag=`basename $wd`; docker build --build-arg PROJECT=pbv-dev . --tag $tag && docker run -p 127.0.0.1:8080:8080/tcp --env REGION us-central1 --env PORT=8080 --env K_REVISION=localhost --env GIT_HASH=`git rev-parse HEAD` $tag:latest",
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
     "start-local": "FIRESTORE_EMULATOR_HOST=[::1]:8404 PORT=8080 K_REVISION=localhost PROJECT=pbv-dev GIT_HASH=`git rev-parse HEAD` node src/main.js",
-    "test": "PORT=8080 K_REVISION=unittest PROJECT=pbv-dev GIT_HASH=`git rev-parse HEAD` node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
+    "test": "PORT=8080 K_REVISION=unittest REGION=us-central1 PROJECT=pbv-dev GIT_HASH=`git rev-parse HEAD` node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
     "watch": "yarn -s test --watch"
   },
   "repository": {
