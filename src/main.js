@@ -4,21 +4,40 @@ import { API } from '@pbvision/fastify-firestore-service'
 import { GoogleAuth } from 'google-auth-library'
 
 import { makePBVService } from './app.js'
+import { isLocalhost, isProd } from './utils/utils.js'
 
 let service
 const project = process.env.PROJECT
 const auth = new GoogleAuth()
 
-// add helper method to call internal APIs with our authorization token
+// add helper method to call APIs on this or other services; if the service is
+// internal then we'll make the request with our authorization token (only
+// works if this service has been granted access to the target service!)
 // istanbul ignore next
-API.prototype.callInternalAPI = async function ({ method = 'POST', headers = {}, url, body, qsParams }) {
-  assert(url.substring(0, 8) === 'https://')
-  const rest = url.substring(8)
-  const hostname = rest.split('/', 1)[0]
-  const targetAudience = `https://${hostname}/`
-  const client = await auth.getIdTokenClient(targetAudience)
-  const token = await client.idTokenProvider.fetchIdToken(targetAudience)
-  headers.Authorization = `Bearer ${token}`
+API.prototype.callServiceAPI = async function ({ method = 'POST', headers = {}, service: serviceName, path, body, qsParams }) {
+  let host
+  if (isLocalhost()) {
+    const port = {
+      api: 9100,
+      'api-internal': 9101,
+      'data-extraction': 9102
+    }[serviceName]
+    assert(port, `unknown service or missing port for localhost ${serviceName}`)
+    host = `localhost:${port}`
+  } else {
+    // TODO: don't have prod host yet
+    const hostSuffix = isProd() ? undefined : '-ko3kowqi6a-uc.a.run.app'
+    host = serviceName + hostSuffix
+  }
+
+  const url = `https://${host}${path}`
+  const isServiceInternal = serviceName !== 'api'
+  if (isServiceInternal) {
+    const targetAudience = `https://${host}/`
+    const client = await auth.getIdTokenClient(targetAudience)
+    const token = await client.idTokenProvider.fetchIdToken(targetAudience)
+    headers.Authorization = `Bearer ${token}`
+  }
   return this.callAPI({ method, headers, url, body, qsParams })
 }
 
