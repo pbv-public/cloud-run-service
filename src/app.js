@@ -9,7 +9,7 @@ export async function makePBVService (customizePinoOpts) {
     service: 'api',
     components: { TestAPI },
     cookie: {
-      // TODO: change and move into secrets manager
+      // could move this into secrets manager
       secret: 'HeD5kfDCP52ekV9qw5XDFw'
     },
     healthCheck: {
