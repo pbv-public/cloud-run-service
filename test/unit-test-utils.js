@@ -1,17 +1,18 @@
 import { jest } from '@jest/globals'
 
 import { BaseTest, runTests } from '../node_modules/@pbvision/fastify-firestore-service/test/base-test.js'
-import { isDev, isLocalhost, isProd } from '../src/utils.js'
+import { port } from '../src/port.js'
+import { getServiceHost, isDev, isLocalhost, isProd } from '../src/utils.js'
 
 const ORIG_ENV = process.env
 
-class TestNodeEnv extends BaseTest {
+class TestUtils extends BaseTest {
   beforeEach () {
     jest.resetModules()
     process.env = { ...ORIG_ENV }
   }
 
-  afterAll () {
+  afterEach () {
     process.env = ORIG_ENV
   }
 
@@ -32,6 +33,19 @@ class TestNodeEnv extends BaseTest {
     expect(isProd()).toBe(true)
     expect(isDev()).toBe(false)
   }
+
+  testGetServiceHost () {
+    expect(getServiceHost(process.env.SERVICE)).toBe(`localhost:${port}`)
+    expect(() => getServiceHost('unknown')).toThrow()
+    process.env.LOCAL_SERVICE_PORT_MAP = JSON.stringify({ unknown: 8088 })
+    expect(getServiceHost('unknown')).toBe('localhost:8088')
+    expect(() => getServiceHost('actually_unknown')).toThrow()
+
+    process.env.NODE_ENV = 'dev'
+    const testSuffix = '-tbd-uc.a.run.app'
+    process.env.CLOUD_RUN_HOSTNAME_SUFFIX = testSuffix
+    expect(getServiceHost('unknown')).toBe('unknown' + testSuffix)
+  }
 }
 
-runTests(TestNodeEnv)
+runTests(TestUtils)

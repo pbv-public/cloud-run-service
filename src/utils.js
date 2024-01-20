@@ -1,15 +1,16 @@
 import assert from 'node:assert'
 
+import { port as portForThisService } from './port.js'
+
 export function getServiceHost (serviceName) {
   if (isLocalhost()) {
-    const portMapping = JSON.parse(process.env.LOCAL_SERVICE_PORT_MAP ?? '{}')
+    if (process.env.SERVICE === serviceName) {
+      return `localhost:${portForThisService}`
+    }
+    const portMapping = JSON.parse(process.env.LOCAL_SERVICE_PORT_MAP ?? 'null')
     const port = portMapping[serviceName]
     assert(port, `unknown service or missing port for localhost ${serviceName}`)
-    if (process.env.SERVICE === serviceName) {
-      return `0.0.0.0:${port}`
-    } else {
-      return `${serviceName}:8080`
-    }
+    return `localhost:${port}`
   } else {
     return serviceName + process.env.CLOUD_RUN_HOSTNAME_SUFFIX
   }

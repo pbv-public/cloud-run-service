@@ -1,6 +1,7 @@
 import assert from 'node:assert'
 
 import { makePBVService } from './app.js'
+import { port } from './port.js'
 
 let service
 const project = process.env.PROJECT
@@ -71,6 +72,6 @@ export async function runService () {
     })
     // start the server
     service = await makeService()
-    service.listen({ port: process.env.PORT ?? 8080, host: '0.0.0.0' })
+    service.listen({ port, host: '0.0.0.0' })
   }
 }
