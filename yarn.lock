@@ -1421,10 +1421,10 @@
   dependencies:
     "@noble/hashes" "^1.1.5"
 
-"@pbvision/fastify-firestore-service@^0.0.22":
-  version "0.0.22"
-  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.22.tgz#adf33992ef862ab2dadee089543b690375458558"
-  integrity sha512-pDy7wiVSmP2dsjoxR9/rquWuCkfAdb/xMw0sV89yhD86HUdJllgvKYY6J4AUAl5D3sEfOchn/RCMQNk3PeW2eQ==
+"@pbvision/fastify-firestore-service@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.23.tgz#3b0d43f22fb72975d4e1a69ccd925d2e1d363cb7"
+  integrity sha512-w72KWaCX2CfKSl+vL99q5+ll0/c9ydMor++07sx1l7LouNP5S2xoomYWM0KNO82QgxaehExARWMi+mIVlqf01A==
   dependencies:
     "@fastify/compress" "^6.1.1"
     "@fastify/cookie" "^9.2.0"
@@ -1432,7 +1432,6 @@
     "@fastify/swagger" "^8.1.0"
     "@fastify/swagger-ui" "^2.0.1"
     "@pbvision/firestore-orm" "^0.0.10"
-    "@pbvision/schema" "^0.2.15"
     "@sentry/node" "^7.91.0"
     fastify "^4.10.0"
     fastify-plugin "^4.5.1"
@@ -1462,7 +1461,7 @@
     strip-ansi "^6.0.0"
     word-wrap "^1.2.3"
 
-"@pbvision/schema@^0.2.15", "@pbvision/schema@^0.2.22":
+"@pbvision/schema@^0.2.22":
   version "0.2.29"
   resolved "https://registry.yarnpkg.com/@pbvision/schema/-/schema-0.2.29.tgz#9f303c60cfe67402bcf41ef1bb160dba4b6e36b7"
   integrity sha512-kLzLr7AcvUGw7zAISDui08rUbIKb4UIzQn2g22YI0EXVVe77HjkAcBTlaoXpGJXoybM9zmJkknWhbNPNe3W+pw==
