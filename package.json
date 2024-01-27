@@ -1,5 +1,7 @@
 {
-  "version": "0.0.0",
+  "name": "@pbvision/cloud-run-service",
+  "version": "0.0.1",
+  "description": "fastify-firestore-service Web Framework on Cloud Run",
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
