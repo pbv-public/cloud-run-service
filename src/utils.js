@@ -16,7 +16,7 @@ export const isUnitTesting = process.env.K_REVISION === 'unittest'
 assert(!isUnitTesting || isLocalhost, 'must be on localhost if unit testing')
 
 export const usingEmulator = !!process.env.FIRESTORE_EMULATOR_HOST
-assert(!usingEmulator || process.env.CLOUD_TASKS_EMULATOR_HOST,
+assert(!usingEmulator || process.env.CLOUD_TASKS_EMULATOR_PORT,
   'both firestore and tasks need to be either emulated or not')
 assert(usingEmulator === (process.env.GCLOUD_PROJECT === 'localhost-emulator'),
   'when using the emulator, GCLOUD_PROJECT should be set to localhost-emulator')

@@ -38,6 +38,9 @@
     - `REGION` - the region this service's cloud run is located in
     - `SERVICE` - the name of this service
   - Optional:
+    - Emulation (must provide all or none of these) for GCP services:
+      - `CLOUD_TASKS_EMULATOR_PORT`
+      - `FIRESTORE_EMULATOR_HOST`
     - `CLOUD_RUN_HOSTNAME_SUFFIX` - the hostname of our cloud run instances in
       this region, excluding the `SERVICE` name portion at the beginning. Only
       required if using the `callServiceAPI()` function.

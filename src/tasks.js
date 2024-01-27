@@ -1,8 +1,19 @@
 import { CloudTasksClient } from '@google-cloud/tasks'
+import { credentials } from '@grpc/grpc-js'
 
-import { getServiceProtocolAndHost } from './utils.js'
+import { getServiceProtocolAndHost, usingEmulator } from './utils.js'
 
-const tasksClient = new CloudTasksClient()
+const tasksClient = (() => {
+  if (usingEmulator) {
+    return new CloudTasksClient({
+      port: process.env.CLOUD_TASKS_EMULATOR_PORT,
+      servicePath: 'localhost',
+      sslCreds: credentials.createInsecure()
+    })
+  }
+  // istanbul ignore next
+  return new CloudTasksClient()
+})()
 
 /**
  * Add a Task to a Cloud Tasks queue.
