@@ -1,4 +1,6 @@
 import { BaseAppTest, BaseTest, runTests } from '../node_modules/@pbvision/fastify-firestore-service/test/base-test.js'
+const { TestAPI, TestCallServiceAPI } = await import('../src/placeholder.js')
+
 export {
   BaseTest, runTests
 }
@@ -6,6 +8,6 @@ export {
 export class AppTest extends BaseAppTest {
   async getMakeServiceFunc () {
     const { makeService } = await import('../src/main.js')
-    return makeService
+    return () => makeService({ TestAPI, TestCallServiceAPI })
   }
 }

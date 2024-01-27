@@ -50,13 +50,13 @@ function makeCustomizeLoggingOptionsFunction () {
   }
 }
 
-export async function makeService () {
+export async function makeService (components = {}) {
   verifyEnvironmentVariables()
-  return makePBVService(makeCustomizeLoggingOptionsFunction())
+  return makePBVService(components, makeCustomizeLoggingOptionsFunction())
 }
 
 // istanbul ignore next
-export async function runService () {
+export async function runService (components) {
   if (process.env.K_REVISION !== 'unittest') {
     // if the instance tells us it will shutdown, try to shut down gracefully (for
     // example flushing logs)
@@ -76,7 +76,7 @@ export async function runService () {
         }), 7000)
     })
     // start the server
-    service = await makeService()
+    service = await makeService(components)
     service.listen({ port, host: '0.0.0.0' })
   }
 }
