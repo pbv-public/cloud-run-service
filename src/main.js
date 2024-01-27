@@ -50,7 +50,7 @@ function makeCustomizeLoggingOptionsFunction () {
   }
 }
 
-export async function makeService (components = {}) {
+export async function makeService (components) {
   verifyEnvironmentVariables()
   return makePBVService(components, makeCustomizeLoggingOptionsFunction())
 }
