@@ -42,5 +42,3 @@ export function getServiceHost (serviceName) {
     return serviceName + process.env.CLOUD_RUN_HOSTNAME_SUFFIX
   }
 }
-
-export const now = () => Math.floor(new Date().getTime() / 1000)

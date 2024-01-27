@@ -6,7 +6,7 @@ import { API, DatabaseAPI } from '@pbvision/fastify-firestore-service'
 import db from '@pbvision/firestore-orm'
 import S from '@pbvision/schema'
 
-import { isUnitTesting, now } from './utils.js'
+import { isUnitTesting } from './utils.js'
 
 class Test extends db.Model {
   static KEY = { id: S.str }
@@ -24,7 +24,7 @@ export class TestAPI extends DatabaseAPI {
   async computeResponse () {
     const doesNotExist = await this.tx.get(Test, 'abc')
     assert(doesNotExist === undefined)
-    return { epoch: now() }
+    return { epoch: Math.floor(new Date().getTime() / 1000) }
   }
 }
 
