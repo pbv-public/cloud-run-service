@@ -5,7 +5,7 @@ import { API } from '@pbvision/fastify-firestore-service'
 import { makePBVService } from './app.js'
 import { callServiceAPI } from './call-service-api.js'
 import { port } from './port.js'
-import { isCloud, isLocalhost } from './utils.js'
+import { isCloud, isLocalhost, isUnitTesting } from './utils.js'
 
 API.prototype.callServiceAPI = callServiceAPI
 
@@ -83,7 +83,9 @@ export async function runService (components) {
         }), 7000)
     })
   }
-  // start the server
-  service = await makeService(components)
-  service.listen({ port, host: '0.0.0.0' })
+  if (!isUnitTesting) {
+    // start the server
+    service = await makeService(components)
+    service.listen({ port, host: '0.0.0.0' })
+  }
 }
