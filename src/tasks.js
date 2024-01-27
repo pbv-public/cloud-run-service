@@ -28,8 +28,9 @@ export async function enqueueCloudTask ({
   service = 'internal',
   name = undefined, ignoreNameAlreadyUsedError = false
 }) {
-  const parent = tasksClient.queuePath(
-    process.env.PROJECT, process.env.REGION, queue)
+  const project = process.env.GCLOUD_PROJECT
+  const region = process.env.REGION
+  const parent = tasksClient.queuePath(project, region, queue)
   const protocolAndHost = getServiceProtocolAndHost(service)
   const task = {
     httpRequest: {
@@ -40,12 +41,12 @@ export async function enqueueCloudTask ({
       url: `${protocolAndHost}/${queue.replace(/-/g, '_')}`,
       body: Buffer.from(JSON.stringify(payload)).toString('base64'),
       oidcToken: {
-        serviceAccountEmail: `cr-${process.env.SERVICE}@${process.env.PROJECT}.iam.gserviceaccount.com`
+        serviceAccountEmail: `cr-${process.env.SERVICE}@${project}.iam.gserviceaccount.com`
       }
     }
   }
   if (name) {
-    const fqName = tasksClient.taskPath(process.env.PROJECT, process.env.REGION, queue, name)
+    const fqName = tasksClient.taskPath(project, region, queue, name)
     task.name = fqName
   }
   const request = { parent, task }

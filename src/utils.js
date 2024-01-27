@@ -14,7 +14,7 @@ export function getServiceHost (serviceName) {
     if (process.env.SERVICE === serviceName) {
       return `localhost:${portForThisService}`
     }
-    const portMapping = JSON.parse(process.env.LOCAL_SERVICE_PORT_MAP ?? 'null')
+    const portMapping = JSON.parse(process.env.LOCAL_SERVICE_PORT_MAP)
     const port = portMapping[serviceName]
     assert(port, `unknown service or missing port for localhost ${serviceName}`)
     return `localhost:${port}`

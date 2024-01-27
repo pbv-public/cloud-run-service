@@ -11,7 +11,7 @@
 ## Requirements
 
 - Must run with a service account named
-  `cr-${process.env.SERVICE}@${process.env.PROJECT}.iam.gserviceaccount.com`
+  `cr-${process.env.SERVICE}@${process.env.GCLOUD_PROJECT}.iam.gserviceaccount.com`
   with at least these permissions (along with whatever else your service
   requires):
   - `roles/run.invoker` - if the service needs to call other services
@@ -24,7 +24,8 @@
   - Required:
     - `GIT_HASH` - the commit from which the current code was generated
     - `K_REVISION` - provided by cloud run (the revision ID)
-      - Can be `localhost`
+      - When running a local server, it will be `localhost`
+      - When running it unit tests, it should be`unittest`
     - `NODE_ENV`
       - If this is `localhost` then `isLocalhost()` will return true.
       - If this is `dev` then `isDev()` will return true.

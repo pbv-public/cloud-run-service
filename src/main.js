@@ -10,11 +10,18 @@ import { isLocalhost } from './utils.js'
 API.prototype.callServiceAPI = callServiceAPI
 
 let service
-const project = process.env.PROJECT
+const project = process.env.GCLOUD_PROJECT
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = ['K_REVISION', 'NODE_ENV', 'PROJECT', 'REGION', 'SERVICE']
-  if (process.env.NODE_ENV !== 'localhost') {
+  const requiredEnvKeys = [
+    'GCLOUD_PROJECT', 'K_REVISION', 'NODE_ENV', 'REGION', 'SERVICE']
+  // istanbul ignore else
+  if (isLocalhost()) {
+    assert(process.env.FIRESTORE_EMULATOR_HOST, 'use emulator on localhost')
+    assert(['localhost', 'unittest'].indexOf(process.env.K_REVISION) !== -1,
+      'K_REVISION must be "localhost" or "unittest" in this environment')
+  } else {
+    // must have GIT_HASH to send to sentry in the cloud
     requiredEnvKeys.push('GIT_HASH')
   }
   for (const k of requiredEnvKeys) {

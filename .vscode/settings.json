@@ -28,6 +28,7 @@
     "esbenp",
     "fastify",
     "firestore",
+    "gcloud",
     "gserviceaccount",
     "INDEBUGGER",
     "oidc",

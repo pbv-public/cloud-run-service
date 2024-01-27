@@ -17,6 +17,7 @@ class TestUtils extends BaseTest {
   }
 
   testEnv () {
+    expect(process.env.GIT_HASH).toBe(undefined)
     expect(process.env.K_REVISION).toBe('unittest')
     expect(process.env.NODE_ENV).toBe('localhost')
     expect(isLocalhost()).toBe(true)
