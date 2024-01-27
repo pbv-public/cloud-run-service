@@ -14,4 +14,5 @@ ENV GIT_HASH=${GIT_HASH}
 # copy source files second (after dependencies are installed so rebuilds are
 # super fast whenever only the source code changes)
 COPY src ./src/
+RUN rm ./src/placeholder.js
 ENTRYPOINT [ "node", "src/main.js" ]

@@ -1,14 +1,18 @@
 import { makeService } from '@pbvision/fastify-firestore-service'
 
-import { TestAPI } from './placeholder.js'
 import { port } from './port.js'
-import { isProd } from './utils.js'
+import { isProd, isUnitTesting } from './utils.js'
 
 export async function makePBVService (customizePinoOpts) {
   const isProdEnv = isProd()
+  const components = {}
+  if (isUnitTesting()) {
+    const { TestAPI, TestCallServiceAPI } = await import('./placeholder.js')
+    Object.assign(components, { TestAPI, TestCallServiceAPI })
+  }
   return makeService({
     service: process.env.SERVICE,
-    components: { TestAPI },
+    components,
     cookie: {
       secret: process.env.COOKIE_SECRET
     },
