@@ -28,6 +28,7 @@
     - `K_REVISION` - provided by cloud run (the revision ID)
       - When running a local server, it will be `localhost`
       - When running it unit tests, it should be`unittest`
+        - If this is `unittest` then `isUnitTesting` will be true.
     - `NODE_ENV`
       - If this is `localhost` then `isLocalhost()` will return true.
       - If this is `dev` then `isDev()` will return true.
