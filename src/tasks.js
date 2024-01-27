@@ -4,6 +4,7 @@ import { credentials } from '@grpc/grpc-js'
 import { getServiceProtocolAndHost, usingEmulator } from './utils.js'
 
 const tasksClient = (() => {
+  // istanbul ignore else
   if (usingEmulator) {
     return new CloudTasksClient({
       port: process.env.CLOUD_TASKS_EMULATOR_PORT,
