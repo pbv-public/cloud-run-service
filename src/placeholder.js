@@ -35,7 +35,7 @@ export class TestCallServiceAPI extends API {
   static RESPONSE = { code: S.int, body: S.str }
 
   async computeResponse () {
-    assert(isUnitTesting())
+    assert(isUnitTesting)
     const resp = await this.callServiceAPI(this.req.body)
     return {
       code: resp.code,

@@ -4,7 +4,6 @@ import { port } from './port.js'
 import { isProd } from './utils.js'
 
 export async function makePBVService (components, customizePinoOpts) {
-  const isProdEnv = isProd()
   return makeService({
     service: process.env.SERVICE,
     components,
@@ -15,16 +14,16 @@ export async function makePBVService (components, customizePinoOpts) {
       path: '/_healthcheck'
     },
     latencyTracker: {
-      disabled: isProdEnv
+      disabled: isProd
     },
     logging: {
       customizePinoOpts,
-      reportErrorDetail: !isProdEnv,
+      reportErrorDetail: !isProd,
       reportAllErrors: true,
       sentryDSN: process.env.sentryDSN
     },
     swagger: {
-      disabled: isProdEnv,
+      disabled: isProd,
       servers: [`http://localhost:${port}`],
       routePrefix: '/app/docs'
     }

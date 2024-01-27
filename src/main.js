@@ -5,7 +5,7 @@ import { API } from '@pbvision/fastify-firestore-service'
 import { makePBVService } from './app.js'
 import { callServiceAPI } from './call-service-api.js'
 import { port } from './port.js'
-import { isLocalhost, isUnitTesting } from './utils.js'
+import { isLocalhost } from './utils.js'
 
 API.prototype.callServiceAPI = callServiceAPI
 
@@ -16,7 +16,7 @@ function verifyEnvironmentVariables () {
   const requiredEnvKeys = [
     'GCLOUD_PROJECT', 'K_REVISION', 'NODE_ENV', 'REGION', 'SERVICE']
   // istanbul ignore else
-  if (isLocalhost()) {
+  if (isLocalhost) {
     assert(process.env.FIRESTORE_EMULATOR_HOST, 'use emulator on localhost')
     assert(['localhost', 'unittest'].indexOf(process.env.K_REVISION) !== -1,
       'K_REVISION must be "localhost" or "unittest" in this environment')
@@ -67,7 +67,7 @@ export async function makeService (components) {
 
 // istanbul ignore next
 export async function runService (components) {
-  if (!isLocalhost()) {
+  if (!isLocalhost) {
     // if the instance tells us it will shutdown, try to shut down gracefully (for
     // example flushing logs)
     process.on('SIGTERM', () => {

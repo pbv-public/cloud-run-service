@@ -2,6 +2,15 @@ import assert from 'node:assert'
 
 import { port as portForThisService } from './port.js'
 
+export const isLocalhost = process.env.NODE_ENV === 'localhost'
+export const isDev = process.env.NODE_ENV === 'dev'
+export const isProd = process.env.NODE_ENV === 'prod'
+// istanbul ignore next
+assert(isLocalhost || isDev || isProd, 'must be on localhost, dev or prod')
+
+export const isUnitTesting = process.env.K_REVISION === 'unittest'
+assert(!isUnitTesting || isLocalhost, 'must be on localhost if unit testing')
+
 export function getServiceProtocolAndHost (serviceName) {
   const host = getServiceHost(serviceName)
   // istanbul ignore next
@@ -10,7 +19,8 @@ export function getServiceProtocolAndHost (serviceName) {
 }
 
 export function getServiceHost (serviceName) {
-  if (isLocalhost()) {
+  // manually check NODE_ENV for testing purposes
+  if (process.env.NODE_ENV === 'localhost') {
     if (process.env.SERVICE === serviceName) {
       return `localhost:${portForThisService}`
     }
@@ -21,27 +31,6 @@ export function getServiceHost (serviceName) {
   } else {
     return serviceName + process.env.CLOUD_RUN_HOSTNAME_SUFFIX
   }
-}
-
-export function isLocalhost () {
-  assert(process.env.NODE_ENV)
-  return process.env.NODE_ENV === 'localhost'
-}
-
-export function isUnitTesting () {
-  const ret = process.env.K_REVISION === 'unittest'
-  assert(!ret || isLocalhost(), 'must on localhost if in unit tests')
-  return ret
-}
-
-export function isProd () {
-  assert(process.env.NODE_ENV)
-  return process.env.NODE_ENV === 'prod'
-}
-
-export function isDev () {
-  assert(process.env.NODE_ENV)
-  return process.env.NODE_ENV === 'dev'
 }
 
 export const now = () => Math.floor(new Date().getTime() / 1000)
