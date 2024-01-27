@@ -5,6 +5,7 @@ import { API } from '@pbvision/fastify-firestore-service'
 import { makePBVService } from './app.js'
 import { callServiceAPI } from './call-service-api.js'
 import { port } from './port.js'
+import { isLocalhost } from './utils.js'
 
 API.prototype.callServiceAPI = callServiceAPI
 
@@ -57,7 +58,7 @@ export async function makeService (components) {
 
 // istanbul ignore next
 export async function runService (components) {
-  if (process.env.K_REVISION !== 'unittest') {
+  if (!isLocalhost()) {
     // if the instance tells us it will shutdown, try to shut down gracefully (for
     // example flushing logs)
     process.on('SIGTERM', () => {
