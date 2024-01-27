@@ -23,7 +23,11 @@ const tasksClient = new CloudTasksClient()
  *   already recently used (no new task added, but a task was recently added
  *   with this name)
  */
-export async function enqueueCloudTask ({ queue, payload, name, ignoreNameAlreadyUsedError = false, service = 'internal' }) {
+export async function enqueueCloudTask ({
+  queue, payload,
+  service = 'internal',
+  name = undefined, ignoreNameAlreadyUsedError = false
+}) {
   const parent = tasksClient.queuePath(
     process.env.PROJECT, process.env.REGION, queue)
   const task = {
