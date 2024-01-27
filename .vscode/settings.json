@@ -24,6 +24,7 @@
   "standard.autoFixOnSave": true,
   "standard.usePackageJson": true,
   "cSpell.words": [
+    "cloudsdktool",
     "cloudtasks",
     "esbenp",
     "fastify",

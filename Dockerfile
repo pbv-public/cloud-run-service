@@ -6,8 +6,8 @@ WORKDIR /app
 COPY .npmrc package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production
 
-ARG PROJECT
-ENV PROJECT=${PROJECT}
+ARG GCLOUD_PROJECT
+ENV GCLOUD_PROJECT=${GCLOUD_PROJECT}
 ARG GIT_HASH
 ENV GIT_HASH=${GIT_HASH}
 

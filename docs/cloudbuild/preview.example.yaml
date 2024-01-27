@@ -10,7 +10,7 @@ steps:
       [
         "build",
         "--build-arg",
-        "PROJECT=$PROJECT_ID",
+        "GCLOUD_PROJECT=$PROJECT_ID",
         "--build-arg",
         "GIT_HASH=$COMMIT_SHA",
         "--tag",

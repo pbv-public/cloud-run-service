@@ -22,6 +22,8 @@
 
 - Environment variables:
   - Required:
+    - `GCLOUD_PROJECT` - the project ID this service is running in; must end in
+      `-dev` or `-prod`
     - `GIT_HASH` - the commit from which the current code was generated
     - `K_REVISION` - provided by cloud run (the revision ID)
       - When running a local server, it will be `localhost`
@@ -30,8 +32,6 @@
       - If this is `localhost` then `isLocalhost()` will return true.
       - If this is `dev` then `isDev()` will return true.
       - If this is `prod` then `isProd()` will return true.
-    - `PROJECT` - the project ID this service is running in
-      - Other endings are not allowed.
     - `REGION` - the region this service's cloud run is located in
     - `SERVICE` - the name of this service
   - Optional:
