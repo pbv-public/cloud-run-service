@@ -38,16 +38,16 @@ class TestTasks extends BaseTest {
       await promise
     }
     expect(CloudTasksClient.prototype.createTask).toHaveBeenCalledWith({
-      // assuming values for project (xyz-dev) and region (us-central1) and
+      // assuming values for project (localhost-emulator) and region (us-central1) and
       // service (tbd)
-      parent: 'projects/xyz-dev/locations/us-central1/queues/test-queue',
+      parent: 'projects/localhost-emulator/locations/us-central1/queues/test-queue',
       task: {
         httpRequest: {
           body: Buffer.from(JSON.stringify(args.payload)).toString('base64'),
           headers: { 'Content-Type': 'application/json' },
           httpMethod: 'POST',
           oidcToken: {
-            serviceAccountEmail: 'cr-tbd@xyz-dev.iam.gserviceaccount.com'
+            serviceAccountEmail: 'cr-tbd@localhost-emulator.iam.gserviceaccount.com'
           },
           url: 'http://localhost:8888/test_queue'
         },
@@ -63,7 +63,7 @@ class TestTasks extends BaseTest {
   async testEnqueueTaskWithName () {
     await this.check(
       { name: 'x', payload: { x: 3 } },
-      { name: 'projects/xyz-dev/locations/us-central1/queues/test-queue/tasks/x' })
+      { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x' })
   }
 
   async testEnqueueTaskWithNameThatWasRecentlyUsedNOTOkay () {
@@ -74,7 +74,7 @@ class TestTasks extends BaseTest {
     })
     await this.check(
       { name: 'x', payload: { x: 3 }, ignoreNameAlreadyUsedError: true },
-      { name: 'projects/xyz-dev/locations/us-central1/queues/test-queue/tasks/x' })
+      { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x' })
   }
 
   async testEnqueueTaskWithNameThatWasRecentlyUsedAndThatsOkay () {
@@ -85,7 +85,7 @@ class TestTasks extends BaseTest {
     })
     await this.check(
       { name: 'x', payload: { x: 3 } },
-      { name: 'projects/xyz-dev/locations/us-central1/queues/test-queue/tasks/x' },
+      { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x' },
       'task name already used recently: x')
   }
 
@@ -96,7 +96,7 @@ class TestTasks extends BaseTest {
     })
     await this.check(
       { name: 'x', payload: { x: 3 } },
-      { name: 'projects/xyz-dev/locations/us-central1/queues/test-queue/tasks/x' },
+      { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x' },
       'not in right format')
   }
 }

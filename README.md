@@ -30,7 +30,9 @@
       - When running it unit tests, it should be`unittest`
         - If this is `unittest` then `isUnitTesting` will be true.
     - `NODE_ENV`
-      - If this is `localhost` then `isLocalhost` will be true.
+      - If this is `localhost` then `isLocalhost` will be true. This is always
+        the case when running locally, even if we're connecting to real cloud resources (like Firestore or Task Queue).
+        - `isCloud` is the opposite of `isLocalhost`.
       - If this is `dev` then `isDev` will be true.
       - If this is `prod` then `isProd` will be true.
     - `REGION` - the region this service's cloud run is located in

@@ -2,7 +2,7 @@ import { jest } from '@jest/globals'
 
 import { BaseTest, runTests } from '../node_modules/@pbvision/fastify-firestore-service/test/base-test.js'
 import { port } from '../src/port.js'
-import { getServiceHost, isDev, isLocalhost, isProd } from '../src/utils.js'
+import { getServiceHost, isCloud, isDev, isLocalhost, isProd, usingEmulator } from '../src/utils.js'
 
 const ORIG_ENV = process.env
 
@@ -21,8 +21,10 @@ class TestUtils extends BaseTest {
     expect(process.env.K_REVISION).toBe('unittest')
     expect(process.env.NODE_ENV).toBe('localhost')
     expect(isLocalhost).toBe(true)
+    expect(isCloud).toBe(false)
     expect(isProd).toBe(false)
     expect(isDev).toBe(false)
+    expect(usingEmulator).toBe(true)
   }
 
   testGetServiceHost () {
