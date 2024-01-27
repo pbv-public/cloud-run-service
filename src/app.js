@@ -1,6 +1,7 @@
 import { makeService } from '@pbvision/fastify-firestore-service'
 
 import { TestAPI } from './placeholder.js'
+import { port } from './port.js'
 import { isProd } from './utils.js'
 
 export async function makePBVService (customizePinoOpts) {
@@ -25,7 +26,7 @@ export async function makePBVService (customizePinoOpts) {
     },
     swagger: {
       disabled: isProdEnv,
-      servers: [`http://localhost:${process.env.PORT ?? 8080}`],
+      servers: [`http://localhost:${port}`],
       routePrefix: '/app/docs'
     }
   })
