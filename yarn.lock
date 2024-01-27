@@ -1421,30 +1421,30 @@
   dependencies:
     "@noble/hashes" "^1.1.5"
 
-"@pbvision/fastify-firestore-service@^0.0.24":
-  version "0.0.24"
-  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.24.tgz#736f904fba8fdf1fb99b758f990f397790dce647"
-  integrity sha512-pVd34Shsfd+jH78rhjNOdhDwtQHkYWO3C92YhZZHeXZbECe8KTevk39YFP+y3HyncA/Elt/YUBO++XNUFiUiIQ==
+"@pbvision/fastify-firestore-service@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.25.tgz#6d72156aa80e6443e051da1bf4a571667d9fb60a"
+  integrity sha512-qkZJvQQ8+E3cK1l0RpJSi4CmydwSG2tOY1DnC8p6YszYP9PMWxXB+KBTf5TzYuieP3XlXQh2JiExo2WarWEdUg==
   dependencies:
     "@fastify/compress" "^6.1.1"
     "@fastify/cookie" "^9.2.0"
     "@fastify/static" "^6.12"
     "@fastify/swagger" "^8.1.0"
     "@fastify/swagger-ui" "^2.0.1"
-    "@pbvision/firestore-orm" "^0.0.10"
+    "@pbvision/firestore-orm" "^0.0.11"
     "@sentry/node" "^7.91.0"
     fastify "^4.10.0"
     fastify-plugin "^4.5.1"
     node-fetch "^3.3.2"
     word-wrap "^1.2.3"
 
-"@pbvision/firestore-orm@^0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.10.tgz#0a1e67094b2ce139c92abf093a4996ec08322c15"
-  integrity sha512-YOG8AsO26tl7lcbuqRiMg0oPXcZ/Q16581eXzWC2kPvQqzjYEHjtEKQFgAgRyZrVHaRHT0xaf84DCRm8kAnsDQ==
+"@pbvision/firestore-orm@^0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.11.tgz#f528537402470762de1436c1aaa501b5febb5fa4"
+  integrity sha512-/9VXb3o14kJPfjiD7+QFU2J5YYrOTFU2HIQAXjgITyEdnoZkehRE82XqEa22WIRrBNXaVmbAjDDijkM+4TOM1A==
   dependencies:
     "@google-cloud/firestore" "^7.1.0"
-    "@pbvision/schema" "^0.2.22"
+    "@pbvision/schema" "^0.2.23"
     deep-object-diff "^1.1.7"
     fast-deep-equal "^3.1.3"
     fast-json-stable-stringify "^2.1.0"
@@ -1461,7 +1461,7 @@
     strip-ansi "^6.0.0"
     word-wrap "^1.2.3"
 
-"@pbvision/schema@^0.2.22":
+"@pbvision/schema@^0.2.23":
   version "0.2.29"
   resolved "https://registry.yarnpkg.com/@pbvision/schema/-/schema-0.2.29.tgz#9f303c60cfe67402bcf41ef1bb160dba4b6e36b7"
   integrity sha512-kLzLr7AcvUGw7zAISDui08rUbIKb4UIzQn2g22YI0EXVVe77HjkAcBTlaoXpGJXoybM9zmJkknWhbNPNe3W+pw==

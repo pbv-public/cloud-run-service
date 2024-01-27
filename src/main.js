@@ -13,8 +13,10 @@ let service
 const project = process.env.PROJECT
 
 function verifyEnvironmentVariables () {
-  const requiredEnvKeys = [
-    'GIT_HASH', 'K_REVISION', 'NODE_ENV', 'PROJECT', 'REGION', 'SERVICE']
+  const requiredEnvKeys = ['K_REVISION', 'NODE_ENV', 'PROJECT', 'REGION', 'SERVICE']
+  if (process.env.NODE_ENV !== 'localhost') {
+    requiredEnvKeys.push('GIT_HASH')
+  }
   for (const k of requiredEnvKeys) {
     assert(process.env[k], `${k} environment variable must be set`)
   }
