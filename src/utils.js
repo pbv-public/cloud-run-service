@@ -5,7 +5,7 @@ import { port as portForThisService } from './port.js'
 export function getServiceProtocolAndHost (serviceName) {
   const host = getServiceHost(serviceName)
   // istanbul ignore next
-  const protocol = host === 'localhost' ? 'https' : 'http'
+  const protocol = host.startsWith('localhost') ? 'http' : 'https'
   return `${protocol}://${host}`
 }
 
