@@ -30,6 +30,5 @@ jobs:
         run: |
           echo 'yarn test-without-starting-db' > ./test.sh
           chmod u+x ./test.sh
-          echo "process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080'" >> ./node_modules/@pbvision/firestore-orm/environment.js
-          firebase emulators:exec --only firestore ./test.sh
+          FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore ./test.sh
         shell: bash

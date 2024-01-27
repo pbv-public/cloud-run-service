@@ -10,13 +10,13 @@
   "exports": "./src/index.js",
   "scripts": {
     "coverage": "yarn -s start-local-db && yarn -s test --coverage",
-    "debug": "yarn -s start-local-db && INDEBUGGER=1 NODE_ENV=localhost PORT=8080 K_REVISION=unittest REGION=us-central1 PROJECT=xyz-dev GIT_HASH=`git rev-parse HEAD` SERVICE=tbd ./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
+    "debug": "yarn -s start-local-db && GCLOUD_PROJECT=xyz-dev FIRESTORE_EMULATOR_HOST=[::1]:8404 INDEBUGGER=1 NODE_ENV=localhost PORT=8080 K_REVISION=unittest REGION=us-central1 PROJECT=xyz-dev GIT_HASH=`git rev-parse HEAD` SERVICE=tbd ./node_modules/nodemon/bin/nodemon.js --no-lazy --legacy-watch --watch ./src --watch ./test --inspect=9229 node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json --runInBand",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "setup": "yarn install --frozen-lockfile",
     "start-docker": "wd=`pwd`; tag=`basename $wd`; docker build --build-arg PROJECT=xyz-dev --build-arg GIT_HASH=`git rev-parse HEAD` . --tag $tag && docker run -p 127.0.0.1:8080:8080/tcp --env REGION='us-central1' --env PORT=8080 --env K_REVISION=localhost --env SERVICE=tbd $tag:latest && docker run $tag:latest",
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
     "test": "yarn -s start-local-db && yarn -s test-without-starting-db",
-    "test-without-starting-db": "NODE_ENV=localhost PORT=8080 K_REVISION='unittest' REGION=us-central1 PROJECT=xyz-dev GIT_HASH=`git rev-parse HEAD` SERVICE=tbd node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
+    "test-without-starting-db": "GCLOUD_PROJECT=xyz-dev FIRESTORE_EMULATOR_HOST=${FIRESTORE_EMULATOR_HOST:=[::1]:8404} NODE_ENV=localhost PORT=8080 K_REVISION='unittest' REGION=us-central1 PROJECT=xyz-dev GIT_HASH=`git rev-parse HEAD` SERVICE=tbd node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
     "start-local": "yarn -s start-local-db && FIRESTORE_EMULATOR_HOST=[::1]:8404 NODE_ENV=localhost PROJECT=xyz-dev REGION=us-central1 PORT=8080 K_REVISION=localhost PROJECT=xyz-dev GIT_HASH=`git rev-parse HEAD` node src/main.js",
     "watch": "yarn -s test --watch"
   },
