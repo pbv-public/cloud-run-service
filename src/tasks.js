@@ -1,3 +1,6 @@
+import assert from 'node:assert'
+import crypto from 'node:crypto'
+
 import { CloudTasksClient } from '@google-cloud/tasks'
 import { credentials } from '@grpc/grpc-js'
 
@@ -27,6 +30,10 @@ const tasksClient = (() => {
  * @param {any} payload the data to convert to JSON add send as the task's body
  * @param {string} [name] if provided, a name that is reused (on the same queue)
  *   within about an hour will be rejected (TaskNameAlreadyExistsError)
+ * @param {Array<string>} [hashNameParts] if provided, the name param will be
+ *   generated from the combination of the queue name (namespacing this name)
+ *   and the name part(s) in this argument; the task name will be an md5 hash
+ *   of all this
  * @param {string} [service="internal"] the service name that the task request
  *   will be routed to
  * @param {boolean} [ignoreNameAlreadyUsedError=false] if true, no error is
@@ -38,7 +45,9 @@ const tasksClient = (() => {
 export async function enqueueCloudTask ({
   queue, payload,
   service = 'internal',
-  name = undefined, ignoreNameAlreadyUsedError = false
+  name = undefined,
+  hashNameParts = undefined,
+  ignoreNameAlreadyUsedError = false
 }) {
   const project = process.env.GCLOUD_PROJECT
   const region = process.env.REGION
@@ -56,6 +65,12 @@ export async function enqueueCloudTask ({
         serviceAccountEmail: `cr-${process.env.SERVICE}@${project}.iam.gserviceaccount.com`
       }
     }
+  }
+  if (hashNameParts) {
+    assert(Array.isArray(hashNameParts))
+    assert(!name, 'cannot specify both name and hashNameParts')
+    const namespacedName = [queue, ...hashNameParts].join('|')
+    name = crypto.createHash('md5').update(namespacedName).digest('hex')
   }
   if (name) {
     const fqName = tasksClient.taskPath(project, region, queue, name)

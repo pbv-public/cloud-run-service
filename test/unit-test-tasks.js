@@ -1,3 +1,5 @@
+import crypto from 'node:crypto'
+
 import { CloudTasksClient } from '@google-cloud/tasks'
 import { jest } from '@jest/globals'
 
@@ -64,6 +66,19 @@ class TestTasks extends BaseTest {
     await this.check(
       { name: 'x', payload: { x: 3 } },
       { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x' })
+  }
+
+  async testEnqueueTaskWithHashName () {
+    const partsToCheck = [
+      [], ['x'], ['x', 'yyy', '']
+    ]
+    for (const hashNameParts of partsToCheck) {
+      const expName = crypto.createHash('md5').update(
+        ['test-queue'].concat(hashNameParts).join('|')).digest('hex')
+      await this.check(
+        { hashNameParts, payload: { x: 3 } },
+        { name: 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/' + expName })
+    }
   }
 
   async testEnqueueTaskWithNameThatWasRecentlyUsedNOTOkay () {
