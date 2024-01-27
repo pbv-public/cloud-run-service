@@ -21,7 +21,7 @@ jobs:
         shell: bash
       - name: 'Setup Firestore Emulator'
         run: |
-          echo '{ "projects": { "default": "fake-for-testing-only" } }' > ./.firebaserc
+          echo '{ "projects": { "default": "xyz-dev" } }' > ./.firebaserc
           echo '{ "firestore": {} }' > ./firebase.json
           npm install -g firebase-tools
           firebase setup:emulators:firestore
