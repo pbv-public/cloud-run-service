@@ -6,6 +6,7 @@ import { isProd, isUnitTesting } from './utils.js'
 export async function makePBVService (customizePinoOpts) {
   const isProdEnv = isProd()
   const components = {}
+  // istanbul ignore else
   if (isUnitTesting()) {
     const { TestAPI, TestCallServiceAPI } = await import('./placeholder.js')
     Object.assign(components, { TestAPI, TestCallServiceAPI })

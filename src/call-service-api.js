@@ -14,7 +14,7 @@ export async function callServiceAPI ({
   method = 'POST', headers = {}, isServiceInternal = true
 }) {
   const host = getServiceHost(serviceName)
-  // istanbul ignore if
+  // istanbul ignore next
   const protocol = host === 'localhost' ? 'https' : 'http'
   const url = `${protocol}://${host}${path}`
   if (isServiceInternal) {

@@ -21,6 +21,12 @@ export function isLocalhost () {
   return process.env.NODE_ENV === 'localhost'
 }
 
+export function isUnitTesting () {
+  const ret = process.env.K_REVISION === 'unittest'
+  assert(!ret || isLocalhost(), 'must on localhost if in unit tests')
+  return ret
+}
+
 export function isProd () {
   assert(process.env.NODE_ENV)
   return process.env.NODE_ENV === 'prod'
