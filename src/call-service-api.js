@@ -3,7 +3,7 @@
 // works if this service has been granted access to the target service!)
 import { GoogleAuth } from 'google-auth-library'
 
-import { getServiceHost } from './utils.js'
+import { getServiceProtocolAndHost } from './utils.js'
 
 const auth = new GoogleAuth()
 
@@ -13,12 +13,10 @@ export async function callServiceAPI ({
   body = undefined, qsParams = undefined,
   method = 'POST', headers = {}, isServiceInternal = true
 }) {
-  const host = getServiceHost(serviceName)
-  // istanbul ignore next
-  const protocol = host === 'localhost' ? 'https' : 'http'
-  const url = `${protocol}://${host}${path}`
+  const protocolAndHost = getServiceProtocolAndHost(serviceName)
+  const url = `${protocolAndHost}${path}`
   if (isServiceInternal) {
-    const targetAudience = `https://${host}/`
+    const targetAudience = `${protocolAndHost}/`
     const client = await auth.getIdTokenClient(targetAudience)
     const token = await client.idTokenProvider.fetchIdToken(targetAudience)
     headers.Authorization = `Bearer ${token}`

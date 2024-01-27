@@ -49,7 +49,7 @@ class TestTasks extends BaseTest {
           oidcToken: {
             serviceAccountEmail: 'cr-tbd@xyz-dev.iam.gserviceaccount.com'
           },
-          url: 'https://localhost:8888/test_queue'
+          url: 'http://localhost:8888/test_queue'
         },
         ...taskExpectations
       }

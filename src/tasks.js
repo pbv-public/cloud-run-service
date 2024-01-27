@@ -1,6 +1,6 @@
 import { CloudTasksClient } from '@google-cloud/tasks'
 
-import { getServiceHost } from './utils.js'
+import { getServiceProtocolAndHost } from './utils.js'
 
 const tasksClient = new CloudTasksClient()
 
@@ -30,13 +30,14 @@ export async function enqueueCloudTask ({
 }) {
   const parent = tasksClient.queuePath(
     process.env.PROJECT, process.env.REGION, queue)
+  const protocolAndHost = getServiceProtocolAndHost(service)
   const task = {
     httpRequest: {
       headers: {
         'Content-Type': 'application/json'
       },
       httpMethod: 'POST',
-      url: `https://${getServiceHost(service)}/${queue.replace(/-/g, '_')}`,
+      url: `${protocolAndHost}/${queue.replace(/-/g, '_')}`,
       body: Buffer.from(JSON.stringify(payload)).toString('base64'),
       oidcToken: {
         serviceAccountEmail: `cr-${process.env.SERVICE}@${process.env.PROJECT}.iam.gserviceaccount.com`

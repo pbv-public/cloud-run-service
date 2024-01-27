@@ -51,7 +51,7 @@ class TestCallServiceAPI extends AppTest {
     // make sure Google Auth was called with appropriate arguments (or not, if
     // this wasn't an internal call)
     if (shouldHaveToken) {
-      const targetAudience = `https://localhost:${expPort}/`
+      const targetAudience = `http://localhost:${expPort}/`
       expect(GoogleAuth.prototype.getIdTokenClient).toHaveBeenCalledWith(targetAudience)
       expect(this.fetchIdToken).toHaveBeenCalledWith(targetAudience)
     } else {
