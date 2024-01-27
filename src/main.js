@@ -1,7 +1,12 @@
 import assert from 'node:assert'
 
+import { API } from '@pbvision/fastify-firestore-service'
+
 import { makePBVService } from './app.js'
+import { callServiceAPI } from './call-service-api.js'
 import { port } from './port.js'
+
+API.prototype.callServiceAPI = callServiceAPI
 
 let service
 const project = process.env.PROJECT

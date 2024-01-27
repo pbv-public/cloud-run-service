@@ -7,10 +7,16 @@ import { getServiceHost } from './utils.js'
 
 const auth = new GoogleAuth()
 
-// istanbul ignore next
-export async function callServiceAPI ({ method = 'POST', headers = {}, service: serviceName, path, body, qsParams, isServiceInternal = true }) {
+// This function will be added to the API class.
+export async function callServiceAPI ({
+  path, service: serviceName,
+  body = undefined, qsParams = undefined,
+  method = 'POST', headers = {}, isServiceInternal = true
+}) {
   const host = getServiceHost(serviceName)
-  const url = `https://${host}${path}`
+  // istanbul ignore if
+  const protocol = host === 'localhost' ? 'https' : 'http'
+  const url = `${protocol}://${host}${path}`
   if (isServiceInternal) {
     const targetAudience = `https://${host}/`
     const client = await auth.getIdTokenClient(targetAudience)
