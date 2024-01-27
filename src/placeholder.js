@@ -2,12 +2,18 @@
 // shipped to Cloud Run. They only exist for local testing.
 import assert from 'node:assert'
 
-import { API } from '@pbvision/fastify-firestore-service'
+import { API, DatabaseAPI } from '@pbvision/fastify-firestore-service'
+import db from '@pbvision/firestore-orm'
 import S from '@pbvision/schema'
 
 import { isUnitTesting, now } from './utils.js'
 
-export class TestAPI extends API {
+class Test extends db.Model {
+  static KEY = { id: S.str }
+  static FIELDS = { x: S.int }
+}
+
+export class TestAPI extends DatabaseAPI {
   static METHOD = 'GET'
   static PATH = '/time'
   static DESC = 'Just for testing'
@@ -16,6 +22,8 @@ export class TestAPI extends API {
   }
 
   async computeResponse () {
+    const doesNotExist = await this.tx.get(Test, 'abc')
+    assert(doesNotExist === undefined)
     return { epoch: now() }
   }
 }
