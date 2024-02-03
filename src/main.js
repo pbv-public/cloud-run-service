@@ -87,5 +87,6 @@ export async function runService (components) {
     // start the server
     service = await makeService(components)
     service.listen({ port, host: '0.0.0.0' })
+    return service
   }
 }
