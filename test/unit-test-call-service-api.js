@@ -45,7 +45,7 @@ class TestCallServiceAPI extends AppTest {
         body: args.body,
         headers: expHeaders,
         method: args.method ?? 'POST',
-        compress: false
+        compress: true
       })
 
     // make sure Google Auth was called with appropriate arguments (or not, if
