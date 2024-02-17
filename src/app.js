@@ -20,7 +20,7 @@ export async function makePBVService (components, customizePinoOpts) {
       customizePinoOpts,
       reportErrorDetail: !isProd,
       reportAllErrors: true,
-      sentryDSN: process.env.sentryDSN
+      sentryDSN: process.env.SENTRY_DSN
     },
     swagger: {
       disabled: isProd,
