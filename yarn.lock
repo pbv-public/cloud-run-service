@@ -1421,27 +1421,27 @@
   dependencies:
     "@noble/hashes" "^1.1.5"
 
-"@pbvision/fastify-firestore-service@^0.0.33":
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.33.tgz#2942283db37275d332db2f460411642af105ec71"
-  integrity sha512-SWxTcW1qI4TjAsvbEfiY3d5Yt6yNPhFIseK2rvWOXFiCtMx8OREkVoPjsJe/a7H0X6kPzBU7PI+Ys1LRB6yBjg==
+"@pbvision/fastify-firestore-service@^0.0.34":
+  version "0.0.34"
+  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.34.tgz#d513a378c4775c73945d4e2d708e3a658f4f2711"
+  integrity sha512-sF+d/R2JSMjkV9bKWbQe1+fiRFBnsQiPyjGfAKAhoINVDvyCjwDGLTyP7JW0jYgNO2tbRvMopsAY2n0TiXKZgA==
   dependencies:
     "@fastify/compress" "^6.1.1"
     "@fastify/cookie" "^9.2.0"
     "@fastify/static" "^6.12"
     "@fastify/swagger" "^8.1.0"
     "@fastify/swagger-ui" "^2.0.1"
-    "@pbvision/firestore-orm" "^0.0.14"
+    "@pbvision/firestore-orm" "^0.0.15"
     "@sentry/node" "^7.91.0"
     fastify "^4.10.0"
     fastify-plugin "^4.5.1"
     node-fetch "^3.3.2"
     word-wrap "^1.2.3"
 
-"@pbvision/firestore-orm@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.14.tgz#9f358d23ad61749e40874ba44a433e8e2ab59a50"
-  integrity sha512-EO1ee5dqV9qzBzodZvjqeawiEiNjF1Nwov6LisrwOEVH9LIBb9WGjPoxaaIwjFjz/arIROqDP9zMX1C6DJ5HeA==
+"@pbvision/firestore-orm@^0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.15.tgz#b120ae77e5cfcadf43b2baf301ddb2b25ca3ee88"
+  integrity sha512-NNAre1Ggu80bxVFwCedvEZNAO6IWTMuJxD6cm9GvlUtdQpmIAv605ALljGNm7OB+6l+/AzJAbTjvIl0m3PmTqA==
   dependencies:
     "@google-cloud/firestore" "^7.1.0"
     "@pbvision/schema" "^0.2.27"
