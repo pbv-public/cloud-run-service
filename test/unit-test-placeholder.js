@@ -1,4 +1,4 @@
-import { AppTest, runTests } from './base-test'
+import { AppTest, runTests } from './base-test.js'
 
 class PlaceholderTest extends AppTest {
   async testTime () {
