@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/tasks": "^4.0.1",
-    "@pbvision/fastify-firestore-service": "^0.0.36",
+    "@pbvision/fastify-firestore-service": "^0.0.37",
     "google-auth-library": "^9.4.2"
   },
   "devDependencies": {
@@ -44,6 +44,7 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
+    "firebase-tools": "^13.5.2",
     "jest": "^29.7.0",
     "standard": "^17.1.0",
     "superagent": "^8",

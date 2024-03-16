@@ -21,14 +21,13 @@ jobs:
         shell: bash
       - name: 'Setup Firestore Emulator'
         run: |
-          echo '{ "projects": { "default": "localhost-emulator" } }' > ./.firebaserc
-          echo '{ "firestore": {} }' > ./firebase.json
-          npm install -g firebase-tools
-          firebase setup:emulators:firestore
+          dir=./node_modules/@pbvision/firestore-orm/scripts/
+          cp $dir/.firebaserc $dir/firebase.json .
+          yarn run firebase setup:emulators:firestore
         shell: bash
       - name: 'Run unit tests'
         run: |
           echo 'yarn test-without-starting-db' > ./test.sh
           chmod u+x ./test.sh
-          FIRESTORE_EMULATOR_HOST=localhost:8080 firebase emulators:exec --only firestore ./test.sh
+          yarn run firebase emulators:exec --only firestore ./test.sh
         shell: bash
