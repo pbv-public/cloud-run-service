@@ -163,6 +163,25 @@ class AnalyticsTest extends AppTest {
     }])
   }
 
+  async testOmittingEventProperties () {
+    await this.app.post('/analytics')
+      .send({
+        eventCalls: [
+          ['some uid', 'some event']
+        ]
+      }).expect(200)
+    const calls = this.fetchMock.mock.calls
+    expect(calls.length).toBe(1)
+    const actualBody = JSON.parse(calls[0][1].body)
+    expect(actualBody).toEqual([{
+      event: 'some event',
+      properties: expect.objectContaining({
+        $user_id: 'some uid',
+        token: mixpanelToken
+      })
+    }])
+  }
+
   async testUserAgent () {
     await this.sendBasicEvent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
     const calls = this.fetchMock.mock.calls

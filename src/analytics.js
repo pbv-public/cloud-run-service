@@ -29,7 +29,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     return super.postCommit(respData)
   }
 
-  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties, deviceId = null, insertId = null) {
+  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties = {}, deviceId = null, insertId = null) {
     if (insertId) {
       // insert id must be <= 36 chars & only have alphanumeric & hyphen chars
       insertId = crypto.createHash('md5').update(insertId).digest('hex')
