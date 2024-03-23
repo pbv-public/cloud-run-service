@@ -34,14 +34,13 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     assert(this.__analyticsSent === false)
     this.__analyticsEvents.push({
       event: eventName,
-      properties: {
+      properties: addSenderId(mixpanelUserId, {
         ...inputProperties,
         token: mixpanelToken,
         time: new Date().getTime(),
-        distinct_id: mixpanelUserId,
         $insert_id: randomUUID(),
         ip: this.req.ip
-      }
+      })
     })
   }
 
@@ -106,11 +105,10 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
       const body = []
       for (const mixpanelUserId of Object.keys(updatesByUser)) {
         const updates = updatesByUser[mixpanelUserId]
-        body.push({
+        body.push(addSenderId(mixpanelUserId, {
           $token: mixpanelToken,
-          $distinct_id: mixpanelUserId,
           [type]: updates
-        })
+        }))
       }
       promises.push(this.__sendUserProfileUpdates(type, body))
     }
@@ -127,4 +125,13 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
       body
     })
   }
+}
+
+function addSenderId (mixpanelUserId, properties) {
+  if (mixpanelUserId.startsWith('$device:')) {
+    properties.$device_id = mixpanelUserId
+  } else {
+    properties.$user_id = mixpanelUserId
+  }
+  return properties
 }

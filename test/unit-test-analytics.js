@@ -33,7 +33,7 @@ class AnalyticsTest extends AppTest {
       properties: expect.objectContaining({
         cool: 1,
         hi: 'world',
-        distinct_id: 'some uid',
+        $user_id: 'some uid',
         token: mixpanelToken
       })
     }])
@@ -53,6 +53,27 @@ class AnalyticsTest extends AppTest {
         ['some uid', 'some event', { cool: 1, hi: 'world' }]
       ]
     }).expect(200)
+  }
+
+  async testDeviceId () {
+    await this.app.post('/analytics')
+      .send({
+        eventCalls: [
+          ['$device:xyz', 'some event', { cool: 1, hi: 'world' }]
+        ]
+      }).expect(200)
+    const calls = this.fetchMock.mock.calls
+    expect(calls.length).toBe(1)
+    const actualBody = JSON.parse(calls[0][1].body)
+    expect(actualBody).toEqual([{
+      event: 'some event',
+      properties: expect.objectContaining({
+        cool: 1,
+        hi: 'world',
+        $device_id: '$device:xyz',
+        token: mixpanelToken
+      })
+    }])
   }
 
   async testUserAgent () {
@@ -118,7 +139,7 @@ class AnalyticsTest extends AppTest {
 
     // check $set updates
     const actualSetUpdates = JSON.parse(calls[0][1].body)
-    actualSetUpdates.sort((a, b) => a.$distinct_id.localeCompare(b.$distinct_id))
+    actualSetUpdates.sort((a, b) => a.$user_id.localeCompare(b.$user_id))
     const expectedSets = [
       { p1: false, p2: 5, p3: 'hi' },
       { p1: 'cool', p2: 6 }
@@ -127,7 +148,7 @@ class AnalyticsTest extends AppTest {
       const actualArgs = actualSetUpdates[i]
       expect(actualArgs).toEqual({
         $token: mixpanelToken,
-        $distinct_id: uids[i],
+        $user_id: uids[i],
         $set: expectedSets[i]
       })
     }
@@ -141,7 +162,7 @@ class AnalyticsTest extends AppTest {
       const actualArgs = actualSetOnceUpdates[i]
       expect(actualArgs).toEqual({
         $token: mixpanelToken,
-        $distinct_id: uids[1],
+        $user_id: uids[1],
         $set_once: expectedSetOnces[i]
       })
     }
