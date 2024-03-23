@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 import { randomUUID } from 'node:crypto'
 
-import { DatabaseAPI } from '@pbvision/fastify-firestore-service'
+import { DatabaseAPI, EXCEPTIONS } from '@pbvision/fastify-firestore-service'
 import UAParser from 'ua-parser-js'
 
 import { isProd } from './utils.js'
@@ -100,6 +100,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
         body: this.__analyticsEvents
       }))
     }
+    const sent = []
     for (const type of Object.keys(this.__analyticsUserProfileUpdates)) {
       const updatesByUser = this.__analyticsUserProfileUpdates[type]
       const body = []
@@ -111,8 +112,17 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
         }))
       }
       promises.push(this.__sendUserProfileUpdates(type, body))
+      sent.push({ type, body })
     }
-    return Promise.all(promises)
+    const responses = await Promise.all(promises)
+    for (let i = 0; i < responses.length; i++) {
+      const resp = responses[i]
+      if (!resp.isOk || resp.data !== 1) {
+        console.log('error response from mixpanel', resp, sent)
+        throw new EXCEPTIONS.RequestError(
+          'failed to log analytics', { resp, sent }, 551)
+      }
+    }
   }
 
   async __sendUserProfileUpdates (type, body) {

@@ -6,7 +6,15 @@ class AnalyticsTest extends AppTest {
   async beforeEach () {
     await super.beforeEach()
     // mock using node-fetch to request the mixpanel APIs
-    this.fetchMock.mockResp()
+    this.fetchMock.mockResp(1)
+  }
+
+  async testMixpanelAPIFailure () {
+    this.fetchMock.mockResp(0)
+    await this.sendBasicEvent(null, 551)
+
+    this.fetchMock.mockResp('', 500)
+    await this.sendBasicEvent(null, 551)
   }
 
   async testNoAnalyticsLogged () {
@@ -43,7 +51,7 @@ class AnalyticsTest extends AppTest {
     expect(props.$insert_id).toMatch(/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/)
   }
 
-  async sendBasicEvent (userAgent) {
+  async sendBasicEvent (userAgent, expRespCode = 200) {
     const req = this.app.post('/analytics')
     if (userAgent) {
       req.set('User-Agent', userAgent)
@@ -52,7 +60,7 @@ class AnalyticsTest extends AppTest {
       eventCalls: [
         ['some uid', 'some event', { cool: 1, hi: 'world' }]
       ]
-    }).expect(200)
+    }).expect(expRespCode)
   }
 
   async testDeviceId () {
