@@ -63,6 +63,39 @@ class AnalyticsTest extends AppTest {
     }).expect(expRespCode)
   }
 
+  async testSendInBatches () {
+    await this.app.post('/analytics')
+      .send({
+        eventCalls: [
+          ['xyz', 'some event', { cool: 1, hi: 'world' }]
+        ],
+        moreEventCalls: [
+          ['xyz', 'another event', { x: 2 }]
+        ]
+      }).expect(200)
+    const calls = this.fetchMock.mock.calls
+    expect(calls.length).toBe(2)
+    const actualBody = JSON.parse(calls[0][1].body)
+    expect(actualBody).toEqual([{
+      event: 'some event',
+      properties: expect.objectContaining({
+        cool: 1,
+        hi: 'world',
+        $user_id: 'xyz',
+        token: mixpanelToken
+      })
+    }])
+    const actualBody2 = JSON.parse(calls[1][1].body)
+    expect(actualBody2).toEqual([{
+      event: 'another event',
+      properties: expect.objectContaining({
+        x: 2,
+        $user_id: 'xyz',
+        token: mixpanelToken
+      })
+    }])
+  }
+
   async testDeviceId () {
     await this.app.post('/analytics')
       .send({

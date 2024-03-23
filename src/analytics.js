@@ -21,7 +21,6 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     super(fastify, req, reply)
     this.__analyticsEvents = []
     this.__analyticsUserProfileUpdates = {} // uid to $set/$set_once to changes
-    this.__analyticsSent = false
   }
 
   async postCommit (respData) {
@@ -31,7 +30,6 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
   }
 
   logAnalyticsEvent (mixpanelUserId, eventName, inputProperties, deviceId = null) {
-    assert(this.__analyticsSent === false)
     this.__analyticsEvents.push({
       event: eventName,
       properties: addSenderId(mixpanelUserId, {
@@ -60,14 +58,13 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
   }
 
   async sendAnalyticsEvents () {
-    // istanbul ignore if
-    if (this.__analyticsSent) {
-      return
-    }
-    this.__analyticsSent = true
+    const events = this.__analyticsEvents
+    this.__analyticsEvents = []
+    const userProfileUpdates = this.__analyticsUserProfileUpdates
+    this.__analyticsUserProfileUpdates = {}
 
     const promises = []
-    if (this.__analyticsEvents.length) {
+    if (events.length) {
       const uaData = {}
       const parser = new UAParser(this.req.headers['user-agent'])
       const browser = parser.getBrowser()
@@ -92,7 +89,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
         }
       }
 
-      for (const x of this.__analyticsEvents) {
+      for (const x of events) {
         Object.assign(x.properties, uaData)
       }
       // send all the events in one Mixpanel API call
@@ -100,12 +97,12 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
         method: 'POST',
         url: 'https://api.mixpanel.com/track',
         headers: { accept: 'text/plain' },
-        body: this.__analyticsEvents
+        body: events
       }))
     }
     const sent = []
-    for (const type of Object.keys(this.__analyticsUserProfileUpdates)) {
-      const updatesByUser = this.__analyticsUserProfileUpdates[type]
+    for (const type of Object.keys(userProfileUpdates)) {
+      const updatesByUser = userProfileUpdates[type]
       const body = []
       for (const uid of Object.keys(updatesByUser)) {
         const updates = updatesByUser[uid]

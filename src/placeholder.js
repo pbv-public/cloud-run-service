@@ -54,12 +54,18 @@ export class TestAnalyticsAPI extends DatabaseAPIWithAnalytics {
   async computeResponse () {
     // istanbul ignore next
     assert(isUnitTesting || isLocalhost)
-    const { eventCalls, profileUpdates } = this.req.body
+    const { eventCalls, profileUpdates, moreEventCalls } = this.req.body
     for (const x of (eventCalls ?? [])) {
       this.logAnalyticsEvent(...x)
     }
     for (const x of (profileUpdates ?? [])) {
       this.updateAnalyticsUserProfile(...x)
+    }
+    if (moreEventCalls) {
+      await this.sendAnalyticsEvents()
+      for (const x of moreEventCalls) {
+        this.logAnalyticsEvent(...x)
+      }
     }
   }
 }
