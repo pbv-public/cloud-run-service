@@ -8,6 +8,8 @@ import S from '@pbvision/schema'
 
 import { isUnitTesting } from './utils.js'
 
+import { DatabaseAPIWithAnalytics } from './index.js'
+
 class Test extends db.Model {
   static KEY = { id: S.str }
   static FIELDS = { x: S.int }
@@ -40,6 +42,23 @@ export class TestCallServiceAPI extends API {
     return {
       code: resp.code,
       body: typeof resp.data === 'object' ? JSON.stringify(resp.data) : (resp.data ?? '')
+    }
+  }
+}
+
+export class TestAnalyticsAPI extends DatabaseAPIWithAnalytics {
+  static PATH = '/analytics'
+  static DESC = 'This is used by unit tests only to test DatabaseAPIWithAnalytics.'
+  static BODY = S.obj()
+
+  async computeResponse () {
+    assert(isUnitTesting)
+    const { eventCalls, profileUpdates } = this.req.body
+    for (const x of (eventCalls ?? [])) {
+      this.logAnalyticsEvent(...x)
+    }
+    for (const x of (profileUpdates ?? [])) {
+      this.updateAnalyticsUserProfile(...x)
     }
   }
 }

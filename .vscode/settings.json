@@ -33,6 +33,7 @@
     "gserviceaccount",
     "INDEBUGGER",
     "oidc",
-    "pino"
+    "pino",
+    "uids"
   ]
 }
