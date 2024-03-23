@@ -1,3 +1,5 @@
+import crypto from 'node:crypto'
+
 import { mixpanelToken } from '../src/analytics.js'
 
 import { AppTest, runTests } from './base-test.js'
@@ -135,6 +137,28 @@ class AnalyticsTest extends AppTest {
         $user_id: 'some uid',
         $device_id: '$device:xyz',
         token: mixpanelToken
+      })
+    }])
+  }
+
+  async testCustomInsertionId () {
+    await this.app.post('/analytics')
+      .send({
+        eventCalls: [
+          ['some uid', 'some event', { cool: 1, hi: 'world' }, null, 'xx']
+        ]
+      }).expect(200)
+    const calls = this.fetchMock.mock.calls
+    expect(calls.length).toBe(1)
+    const actualBody = JSON.parse(calls[0][1].body)
+    expect(actualBody).toEqual([{
+      event: 'some event',
+      properties: expect.objectContaining({
+        cool: 1,
+        hi: 'world',
+        $user_id: 'some uid',
+        token: mixpanelToken,
+        $insert_id: crypto.createHash('md5').update('xx').digest('hex')
       })
     }])
   }

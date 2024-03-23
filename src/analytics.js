@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { randomUUID } from 'node:crypto'
+import crypto, { randomUUID } from 'node:crypto'
 
 import { DatabaseAPI, EXCEPTIONS } from '@pbvision/fastify-firestore-service'
 import UAParser from 'ua-parser-js'
@@ -29,14 +29,21 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     return super.postCommit(respData)
   }
 
-  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties, deviceId = null) {
+  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties, deviceId = null, insertId = null) {
+    if (insertId) {
+      // insert id must be <= 36 chars & only have alphanumeric & hyphen chars
+      insertId = crypto.createHash('md5').update(insertId).digest('hex')
+    } else {
+      insertId = randomUUID()
+    }
+
     this.__analyticsEvents.push({
       event: eventName,
       properties: addSenderId(mixpanelUserId, {
         ...inputProperties,
         token: mixpanelToken,
         time: new Date().getTime(),
-        $insert_id: randomUUID(),
+        $insert_id: insertId,
         ip: this.req.ip
       }, deviceId)
     })
