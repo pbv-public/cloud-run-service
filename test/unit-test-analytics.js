@@ -169,7 +169,7 @@ class AnalyticsTest extends AppTest {
 
     // check $set updates
     const actualSetUpdates = JSON.parse(calls[0][1].body)
-    actualSetUpdates.sort((a, b) => a.$user_id.localeCompare(b.$user_id))
+    actualSetUpdates.sort((a, b) => a.$distinct_id.localeCompare(b.$distinct_id))
     const expectedSets = [
       { p1: false, p2: 5, p3: 'hi' },
       { p1: 'cool', p2: 6 }
@@ -178,7 +178,7 @@ class AnalyticsTest extends AppTest {
       const actualArgs = actualSetUpdates[i]
       expect(actualArgs).toEqual({
         $token: mixpanelToken,
-        $user_id: uids[i],
+        $distinct_id: uids[i],
         $set: expectedSets[i]
       })
     }
@@ -192,7 +192,7 @@ class AnalyticsTest extends AppTest {
       const actualArgs = actualSetOnceUpdates[i]
       expect(actualArgs).toEqual({
         $token: mixpanelToken,
-        $user_id: uids[1],
+        $distinct_id: uids[1],
         $set_once: expectedSetOnces[i]
       })
     }

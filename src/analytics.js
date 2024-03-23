@@ -44,16 +44,19 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     })
   }
 
-  updateAnalyticsUserProfile (mixpanelUserId, key, value, method = '$set') {
+  updateAnalyticsUserProfile (uid, key, value, method = '$set') {
     assert(mixpanelUpdateProfileURLs[method])
+    // should be our user id not a device id... profile data is not recommended
+    // for anonymous users
+    assert(!uid.startsWith('$device:'))
     if (!this.__analyticsUserProfileUpdates[method]) {
       this.__analyticsUserProfileUpdates[method] = {}
     }
     const updatesByUser = this.__analyticsUserProfileUpdates[method]
-    if (!updatesByUser[mixpanelUserId]) {
-      updatesByUser[mixpanelUserId] = {}
+    if (!updatesByUser[uid]) {
+      updatesByUser[uid] = {}
     }
-    updatesByUser[mixpanelUserId][key] = value
+    updatesByUser[uid][key] = value
   }
 
   async sendAnalyticsEvents () {
@@ -104,12 +107,13 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     for (const type of Object.keys(this.__analyticsUserProfileUpdates)) {
       const updatesByUser = this.__analyticsUserProfileUpdates[type]
       const body = []
-      for (const mixpanelUserId of Object.keys(updatesByUser)) {
-        const updates = updatesByUser[mixpanelUserId]
-        body.push(addSenderId(mixpanelUserId, {
+      for (const uid of Object.keys(updatesByUser)) {
+        const updates = updatesByUser[uid]
+        body.push({
+          $distinct_id: uid,
           $token: mixpanelToken,
           [type]: updates
-        }))
+        })
       }
       promises.push(this.__sendUserProfileUpdates(type, body))
       sent.push({ type, body })
@@ -137,7 +141,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
   }
 }
 
-function addSenderId (mixpanelUserId, properties, deviceId = null) {
+function addSenderId (mixpanelUserId, properties, deviceId) {
   if (mixpanelUserId.startsWith('$device:')) {
     properties.$device_id = mixpanelUserId
   } else {
