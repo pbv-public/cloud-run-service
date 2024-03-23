@@ -29,7 +29,9 @@
   "dependencies": {
     "@google-cloud/tasks": "^4.0.1",
     "@pbvision/fastify-firestore-service": "^0.0.38",
-    "google-auth-library": "^9.4.2"
+    "google-auth-library": "^9.4.2",
+    "mixpanel": "^0.18.0",
+    "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",
