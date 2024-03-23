@@ -30,7 +30,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
     return super.postCommit(respData)
   }
 
-  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties) {
+  logAnalyticsEvent (mixpanelUserId, eventName, inputProperties, deviceId = null) {
     assert(this.__analyticsSent === false)
     this.__analyticsEvents.push({
       event: eventName,
@@ -40,7 +40,7 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
         time: new Date().getTime(),
         $insert_id: randomUUID(),
         ip: this.req.ip
-      })
+      }, deviceId)
     })
   }
 
@@ -127,11 +127,14 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
   }
 }
 
-function addSenderId (mixpanelUserId, properties) {
+function addSenderId (mixpanelUserId, properties, deviceId = null) {
   if (mixpanelUserId.startsWith('$device:')) {
     properties.$device_id = mixpanelUserId
   } else {
     properties.$user_id = mixpanelUserId
+    if (deviceId) {
+      properties.$device_id = deviceId
+    }
   }
   return properties
 }
