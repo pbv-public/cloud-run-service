@@ -14,7 +14,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "setup": "yarn install --frozen-lockfile",
     "start-local-db": "./node_modules/@pbvision/firestore-orm/scripts/start-local-db.sh",
-    "start-local": "yarn -s start-local-db && K_REVISION=localhost node --env-file=.env test/main.js",
+    "start-local": "yarn -s start-local-db && K_REVISION=localhost PORT=8090 node --env-file=.env test/main.js",
     "test": "yarn -s start-local-db && yarn -s test-without-starting-db",
     "test-without-starting-db": "node --env-file=.env --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=./jest.config.json",
     "watch": "yarn -s test --watch"

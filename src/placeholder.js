@@ -6,7 +6,7 @@ import { API, DatabaseAPI } from '@pbvision/fastify-firestore-service'
 import db from '@pbvision/firestore-orm'
 import S from '@pbvision/schema'
 
-import { isUnitTesting } from './utils.js'
+import { isLocalhost, isUnitTesting } from './utils.js'
 
 import { DatabaseAPIWithAnalytics } from './index.js'
 
@@ -52,7 +52,8 @@ export class TestAnalyticsAPI extends DatabaseAPIWithAnalytics {
   static BODY = S.obj()
 
   async computeResponse () {
-    assert(isUnitTesting)
+    // istanbul ignore next
+    assert(isUnitTesting || isLocalhost)
     const { eventCalls, profileUpdates } = this.req.body
     for (const x of (eventCalls ?? [])) {
       this.logAnalyticsEvent(...x)
