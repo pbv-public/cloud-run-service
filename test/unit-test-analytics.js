@@ -113,7 +113,8 @@ class AnalyticsTest extends AppTest {
       properties: expect.objectContaining({
         cool: 1,
         hi: 'world',
-        $device_id: '$device:xyz',
+        distinct_id: '$device:xyz',
+        $device_id: 'xyz',
         token: mixpanelToken
       })
     }])
@@ -135,7 +136,8 @@ class AnalyticsTest extends AppTest {
         cool: 1,
         hi: 'world',
         $user_id: 'some uid',
-        $device_id: '$device:xyz',
+        distinct_id: 'some uid',
+        $device_id: 'xyz',
         token: mixpanelToken
       })
     }])

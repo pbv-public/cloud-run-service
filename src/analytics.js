@@ -147,12 +147,19 @@ export class DatabaseAPIWithAnalytics extends DatabaseAPI {
 
 function addSenderId (mixpanelUserId, properties, deviceId) {
   if (mixpanelUserId.startsWith('$device:')) {
-    properties.$device_id = mixpanelUserId
+    properties.distinct_id = mixpanelUserId
+    properties.$device_id = mixpanelUserId.substring(8)
   } else {
-    properties.$user_id = mixpanelUserId
+    properties.distinct_id = properties.$user_id = mixpanelUserId
     if (deviceId) {
-      properties.$device_id = deviceId
+      // istanbul ignore else
+      if (deviceId.startsWith('$device')) {
+        properties.$device_id = deviceId.substring(8)
+      } else {
+        properties.$device_id = deviceId
+      }
     }
   }
+  properties.distinct_id = mixpanelUserId
   return properties
 }
