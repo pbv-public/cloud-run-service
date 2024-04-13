@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/tasks": "^4.0.1",
-    "@pbvision/fastify-firestore-service": "^0.0.41",
+    "@pbvision/fastify-firestore-service": "^0.0.42",
     "google-auth-library": "^9.4.2",
     "ua-parser-js": "^1.0.37"
   },
