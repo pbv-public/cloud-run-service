@@ -1,6 +1,6 @@
 {
   "name": "@pbvision/cloud-run-service",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "description": "fastify-firestore-service Web Framework on Cloud Run",
   "license": "Apache-2.0",
   "type": "module",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/tasks": "^4.0.1",
-    "@pbvision/fastify-firestore-service": "^0.0.47",
+    "@pbvision/fastify-firestore-service": "^0.0.48",
     "google-auth-library": "^9.4.2",
     "ua-parser-js": "^1.0.37"
   },
