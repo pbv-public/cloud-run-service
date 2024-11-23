@@ -69,6 +69,13 @@ class TestTasks extends BaseTest {
       { scheduleTime: { seconds: expect.closeTo(now + 10, -0.7) } })
   }
 
+  async testEnqueueTaskWithSchedule () {
+    const target = 100 + Math.floor(new Date().getTime() / 1000)
+    await this.check(
+      { payload: { x: 3 }, scheduledEpoch: target },
+      { scheduleTime: { seconds: target } })
+  }
+
   async testEnqueueTaskWithName () {
     await this.check(
       { name: 'x', payload: { x: 3 } },

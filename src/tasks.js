@@ -48,7 +48,8 @@ export async function enqueueCloudTask ({
   name = undefined,
   hashNameParts = undefined,
   ignoreNameAlreadyUsedError = false,
-  delaySecs = 0
+  delaySecs = 0,
+  scheduledEpoch = undefined // can only be up to 30 days from now
 }) {
   const project = process.env.GCLOUD_PROJECT
   const region = process.env.REGION
@@ -67,11 +68,19 @@ export async function enqueueCloudTask ({
       }
     }
   }
+  const currentEpoch = new Date().getTime() / 1000
   if (delaySecs) {
-    const currentEpoch = new Date().getTime() / 1000
     task.scheduleTime = {
       seconds: Math.ceil(currentEpoch + delaySecs)
     }
+    assert(!scheduledEpoch, 'cannot specify both delaysSecs and scheduledEpoch')
+  }
+  if (scheduledEpoch) {
+    scheduledEpoch = Math.floor(scheduledEpoch)
+    task.scheduleTime = { seconds: Math.floor(scheduledEpoch) }
+  }
+  if (task.scheduleTime) {
+    assert(task.scheduleTime.seconds <= currentEpoch + 30 * 86400, 'cannot delay for more than 30 days')
   }
   if (hashNameParts) {
     assert(Array.isArray(hashNameParts))
