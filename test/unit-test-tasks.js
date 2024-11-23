@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
 
 import { CloudTasksClient } from '@google-cloud/tasks'
-import { jest } from '@jest/globals'
+import { expect, jest } from '@jest/globals'
 
 import { enqueueCloudTask } from '../src/tasks.js'
 
@@ -60,6 +60,13 @@ class TestTasks extends BaseTest {
 
   async testEnqueueTask () {
     await this.check({ payload: { x: 3 } })
+  }
+
+  async testEnqueueTaskWithDelay () {
+    const now = new Date().getTime() / 1000
+    await this.check(
+      { payload: { x: 3 }, delaySecs: 10 },
+      { scheduleTime: { seconds: expect.closeTo(now + 10, -0.7) } })
   }
 
   async testEnqueueTaskWithName () {

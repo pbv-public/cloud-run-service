@@ -47,7 +47,8 @@ export async function enqueueCloudTask ({
   service = 'internal',
   name = undefined,
   hashNameParts = undefined,
-  ignoreNameAlreadyUsedError = false
+  ignoreNameAlreadyUsedError = false,
+  delaySecs = 0
 }) {
   const project = process.env.GCLOUD_PROJECT
   const region = process.env.REGION
@@ -64,6 +65,12 @@ export async function enqueueCloudTask ({
       oidcToken: {
         serviceAccountEmail: `cr-${process.env.SERVICE}@${project}.iam.gserviceaccount.com`
       }
+    }
+  }
+  if (delaySecs) {
+    const currentEpoch = new Date().getTime() / 1000
+    task.scheduleTime = {
+      seconds: Math.ceil(currentEpoch + delaySecs)
     }
   }
   if (hashNameParts) {
