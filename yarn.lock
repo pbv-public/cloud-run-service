@@ -1552,17 +1552,17 @@
   dependencies:
     "@noble/hashes" "^1.1.5"
 
-"@pbvision/fastify-firestore-service@^0.0.48":
-  version "0.0.48"
-  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.48.tgz#6165c6cf55e1fd444f88a9ff2d878ac80f9ad565"
-  integrity sha512-/BRobSmVMNd86kge1+Bth69GEtAhOmV/TCGgIHTamYfp6dT/SJnap1miBwt1RPygOJdgykUPCnEN/WOnVulNyg==
+"@pbvision/fastify-firestore-service@^0.0.49":
+  version "0.0.49"
+  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.49.tgz#412d868b81f1a8e1aceadfcaa19da3025843d5cf"
+  integrity sha512-fR4In3Pur14bmWSJ6v/0fJfV6GG+toszNDrIpiCaDJ6bdUprCzv5Zor+XKDyzcRNX50hUO1C0XlqX3ZNln/QUQ==
   dependencies:
     "@fastify/compress" "^6.1.1"
     "@fastify/cookie" "^9.2.0"
     "@fastify/static" "^6.12"
     "@fastify/swagger" "^8.1.0"
     "@fastify/swagger-ui" "^2.0.1"
-    "@pbvision/firestore-orm" "^0.0.21"
+    "@pbvision/firestore-orm" "^0.0.22"
     "@sentry/node" "^7.91.0"
     fastify "^4.10.0"
     fastify-plugin "^4.5.1"
@@ -1570,10 +1570,10 @@
     ua-parser-js "^1.0.37"
     word-wrap "^1.2.3"
 
-"@pbvision/firestore-orm@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.21.tgz#2cae2fc91ef0489a53e78a2ecae3b6b630b97380"
-  integrity sha512-XPJpDYfBke12KKpBtG130sk6AMOY0eVzNr+z0o3KE7D01vn1iGex0r5/lDb9vw9BdxW72wxzV7QVkvo1oJuWiw==
+"@pbvision/firestore-orm@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@pbvision/firestore-orm/-/firestore-orm-0.0.22.tgz#9e72c838c5e8deabd9c54cfbed7fb2d49486f5b5"
+  integrity sha512-wlASiave/UqW+XYoJvRngWFdRF4KDLwUNbR6OZifQ49ct6Dp7PaG3YBysO3t63EwwuQlQrVHEGTf3XAUUb4fgA==
   dependencies:
     "@google-cloud/firestore" "^7.1.0"
     "@pbvision/schema" "^0.2.29"
