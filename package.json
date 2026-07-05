@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "exports": "./src/index.js",
   "scripts": {
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@google-cloud/tasks": "^4.0.1",
-    "@pbvision/fastify-firestore-service": "^0.0.50",
+    "@pbvision/fastify-firestore-service": "^0.0.51",
     "google-auth-library": "^9.4.2",
     "ua-parser-js": "^1.0.37"
   },
@@ -45,7 +45,7 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
-    "firebase-tools": "^13.5.2",
+    "firebase-tools": "^14.26.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
     "standard": "^17.1.0",
