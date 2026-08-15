@@ -1,22 +1,70 @@
 import crypto from 'node:crypto'
 
-import { mixpanelToken } from '../src/analytics.js'
+import {
+  mixpanelToken, resetAnalyticsFailureReporting, shouldReportAnalyticsFailure
+} from '../src/analytics.js'
 
-import { AppTest, runTests } from './base-test.js'
+import { AppTest, BaseTest, runTests } from './base-test.js'
 
 class AnalyticsTest extends AppTest {
   async beforeEach () {
     await super.beforeEach()
     // mock using node-fetch to request the mixpanel APIs
     this.fetchMock.mockResp(1)
+    resetAnalyticsFailureReporting()
   }
 
-  async testMixpanelAPIFailure () {
+  // Mixpanel understood the request and refused it, so a retry would be
+  // refused too. The request still succeeds: only the telemetry is lost.
+  async testMixpanelRejectionIsNotRetried () {
     this.fetchMock.mockResp(0)
-    await this.sendBasicEvent(null, 551)
+    await this.sendBasicEvent()
+    expect(this.fetchMock.mock.calls.length).toBe(1)
 
+    this.fetchMock.mockClear()
+    this.fetchMock.mockResp('', 400)
+    await this.sendBasicEvent()
+    expect(this.fetchMock.mock.calls.length).toBe(1)
+  }
+
+  // A 5xx is transient (Mixpanel's own 502 body says to try again), so it is
+  // retried until the attempts run out.
+  async testMixpanelServerErrorIsRetried () {
     this.fetchMock.mockResp('', 500)
-    await this.sendBasicEvent(null, 551)
+    await this.sendBasicEvent()
+    expect(this.fetchMock.mock.calls.length).toBe(3)
+
+    // the second failure is the same kind as the first, so it is suppressed
+    // rather than reported to Sentry again
+    this.fetchMock.mockClear()
+    await this.sendBasicEvent()
+    expect(this.fetchMock.mock.calls.length).toBe(3)
+  }
+
+  // The failure that started this: node-fetch rejects before there is any
+  // response to inspect, e.g. "read ECONNRESET".
+  async testTransportFailureIsRetriedThenDropped () {
+    this.fetchMock.mockImplementation(
+      () => Promise.reject(new Error('read ECONNRESET')))
+    await this.sendBasicEvent()
+    expect(this.fetchMock.mock.calls.length).toBe(3)
+  }
+
+  async testTransportFailureRecoversOnRetry () {
+    let attempts = 0
+    this.fetchMock.mockImplementation(async () => {
+      attempts += 1
+      if (attempts === 1) {
+        throw new Error('socket hang up')
+      }
+      return {
+        status: 200,
+        headers: { get: () => 'application/json' },
+        text: async () => '1'
+      }
+    })
+    await this.sendBasicEvent()
+    expect(attempts).toBe(2)
   }
 
   async testNoAnalyticsLogged () {
@@ -277,4 +325,22 @@ class AnalyticsTest extends AppTest {
   }
 }
 
-runTests(AnalyticsTest)
+class AnalyticsFailureReportingTest extends BaseTest {
+  beforeEach () {
+    resetAnalyticsFailureReporting()
+  }
+
+  testSuppressesRepeatsInsideTheWindow () {
+    const key = 'some failure'
+    expect(shouldReportAnalyticsFailure(key, 1000)).toBe(true)
+    expect(shouldReportAnalyticsFailure(key, 1000)).toBe(false)
+    // a different kind of failure is tracked separately
+    expect(shouldReportAnalyticsFailure('another failure', 1000)).toBe(true)
+    // and a suppressed report does not push the window out
+    const fiveMinutesLater = 1000 + 5 * 60 * 1000
+    expect(shouldReportAnalyticsFailure(key, fiveMinutesLater - 1)).toBe(false)
+    expect(shouldReportAnalyticsFailure(key, fiveMinutesLater)).toBe(true)
+  }
+}
+
+runTests(AnalyticsTest, AnalyticsFailureReportingTest)
