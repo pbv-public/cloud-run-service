@@ -1788,10 +1788,10 @@
   dependencies:
     "@noble/hashes" "^1.1.5"
 
-"@pbvision/fastify-firestore-service@^0.0.54":
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.54.tgz#0192996c586c3bfbe6c17f94c055cbb2a8d9aeca"
-  integrity sha512-wDN/PwgStW9IpF8zlwPm3OzMRQYRiBIbNyQoTKwklXKsnRxe76PrGZ+IWcx+/FoFhMlJKLvVY7QfjhNbcN9f4w==
+"@pbvision/fastify-firestore-service@^0.0.55":
+  version "0.0.55"
+  resolved "https://registry.yarnpkg.com/@pbvision/fastify-firestore-service/-/fastify-firestore-service-0.0.55.tgz#de9af1e334c538dd3504781370cac1c80aa4aeca"
+  integrity sha512-OBJJNopzCtA5qmz+dVldPZKWHgk/XkOZXtrosei4sZh138F0Nfbv6g9XYayw3O8rOGpIcD3LblVvei/qVKXlGQ==
   dependencies:
     "@fastify/compress" "^6.1.1"
     "@fastify/cookie" "^9.2.0"
