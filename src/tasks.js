@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import crypto from 'node:crypto'
 
 import { CloudTasksClient } from '@google-cloud/tasks'
-import { credentials } from '@grpc/grpc-js'
+import { credentials, status } from '@grpc/grpc-js'
 
 import { getServiceProtocolAndHost, usingEmulator } from './utils.js'
 
@@ -19,11 +19,20 @@ const tasksClient = (() => {
   return new CloudTasksClient()
 })()
 
+// the client library never retries createTask since it isn't idempotent
+const CREATE_TASK_RETRY_DELAYS_MS = [100, 300]
+
 /**
  * Add a Task to a Cloud Tasks queue.
  *
  * The task will be routed to the internal API service on a path that matches
  * the queue name (with hyphens replaced by underscores).
+ *
+ * A transient UNAVAILABLE error (e.g., a connection reset) is retried a couple
+ * of times. The failed attempt may have created the task anyway, so a retry
+ * can enqueue a duplicate unnamed task; handlers must tolerate that already
+ * since Cloud Tasks delivers at least once. A named task whose retry finds its
+ * name taken counts as added.
  *
  * @param {Object} task the task to enqueue
  * @param {string} queue the name of the queue to add the task to
@@ -94,10 +103,10 @@ export async function enqueueCloudTask ({
   }
   const request = { parent, task }
   try {
-    await tasksClient.createTask(request)
+    await createTaskWithRetries(request)
     return true
   } catch (e) {
-    if (e.code === 6 && e.message.startsWith('6 ALREADY_EXISTS')) {
+    if (isAlreadyExistsError(e)) {
       if (ignoreNameAlreadyUsedError) {
         return false
       } else {
@@ -106,6 +115,26 @@ export async function enqueueCloudTask ({
     }
     throw e
   }
+}
+
+async function createTaskWithRetries (request) {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await tasksClient.createTask(request)
+    } catch (e) {
+      if (attempt > 0 && isAlreadyExistsError(e)) {
+        return // an earlier attempt created it before its connection failed
+      }
+      if (e.code !== status.UNAVAILABLE || attempt >= CREATE_TASK_RETRY_DELAYS_MS.length) {
+        throw e
+      }
+      await new Promise(resolve => setTimeout(resolve, CREATE_TASK_RETRY_DELAYS_MS[attempt]))
+    }
+  }
+}
+
+function isAlreadyExistsError (e) {
+  return e.code === status.ALREADY_EXISTS && e.message.startsWith('6 ALREADY_EXISTS')
 }
 
 export class TaskNameAlreadyExistsError extends Error {

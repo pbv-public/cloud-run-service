@@ -3,9 +3,19 @@ import crypto from 'node:crypto'
 import { CloudTasksClient } from '@google-cloud/tasks'
 import { expect, jest } from '@jest/globals'
 
-import { enqueueCloudTask } from '../src/tasks.js'
+import { enqueueCloudTask, TaskNameAlreadyExistsError } from '../src/tasks.js'
 
 import { BaseTest, runTests } from './base-test.js'
+
+const NAMED_TASK = 'projects/localhost-emulator/locations/us-central1/queues/test-queue/tasks/x'
+
+function grpcError (code, message) {
+  const err = new Error(message)
+  err.code = code
+  return err
+}
+const unavailableError = () => grpcError(14, '14 UNAVAILABLE: read ECONNRESET')
+const alreadyExistsError = () => grpcError(6, '6 ALREADY_EXISTS: Requested entity already exists')
 
 class TestTasks extends BaseTest {
   async beforeAll () {
@@ -14,14 +24,14 @@ class TestTasks extends BaseTest {
     process.env.LOCAL_SERVICE_PORT_MAP = JSON.stringify({ internal: 8888 })
 
     // mock GoogleAuth because we can't actually get a token during testing
-    this.createTaskReturnValue = new Promise(resolve => resolve())
-    jest.spyOn(CloudTasksClient.prototype, 'createTask').mockImplementation(
-      () => this.createTaskReturnValue)
+    jest.spyOn(CloudTasksClient.prototype, 'createTask')
   }
 
   async beforeEach () {
     await super.beforeEach()
-    CloudTasksClient.prototype.createTask.mockClear()
+    this.createTaskReturnValue = new Promise(resolve => resolve())
+    CloudTasksClient.prototype.createTask.mockReset().mockImplementation(
+      () => this.createTaskReturnValue)
   }
 
   async afterAll () {
@@ -60,6 +70,74 @@ class TestTasks extends BaseTest {
 
   async testEnqueueTask () {
     await this.check({ payload: { x: 3 } })
+  }
+
+  /**
+   * Queues one createTask outcome per attempt (an Error rejects), then enqueues
+   * a task under fake timers so the retry backoff takes no real time.
+   * @returns {Object} { value, error, elapsedMs } of the enqueueCloudTask call
+   */
+  async enqueueWithOutcomes (args, ...outcomes) {
+    for (const outcome of outcomes) {
+      CloudTasksClient.prototype.createTask.mockImplementationOnce(
+        () => outcome ? Promise.reject(outcome) : Promise.resolve())
+    }
+    jest.useFakeTimers()
+    try {
+      const start = jest.now()
+      const settled = enqueueCloudTask({ queue: 'test-queue', payload: { x: 3 }, ...args })
+        .then(value => ({ value }), error => ({ error }))
+      await jest.runAllTimersAsync()
+      return { ...await settled, elapsedMs: jest.now() - start }
+    } finally {
+      jest.useRealTimers()
+    }
+  }
+
+  async testEnqueueTaskRetriesWhenUnavailable () {
+    const ret = await this.enqueueWithOutcomes({}, unavailableError(), null)
+    expect(ret).toEqual({ value: true, elapsedMs: 100 })
+    const calls = CloudTasksClient.prototype.createTask.mock.calls
+    expect(calls.length).toBe(2)
+    expect(calls[1][0]).toBe(calls[0][0])
+  }
+
+  async testEnqueueTaskRethrowsWhenStillUnavailable () {
+    const lastError = unavailableError()
+    const ret = await this.enqueueWithOutcomes(
+      {}, unavailableError(), unavailableError(), lastError)
+    expect(ret).toEqual({ error: lastError, elapsedMs: 400 })
+    expect(CloudTasksClient.prototype.createTask).toHaveBeenCalledTimes(3)
+  }
+
+  async testEnqueueTaskDoesNotRetryOtherErrors () {
+    const err = grpcError(4, '4 DEADLINE_EXCEEDED: took too long')
+    const ret = await this.enqueueWithOutcomes({}, err)
+    expect(ret).toEqual({ error: err, elapsedMs: 0 })
+    expect(CloudTasksClient.prototype.createTask).toHaveBeenCalledTimes(1)
+  }
+
+  async testEnqueueNamedTaskThatExistsAfterRetryWasAdded () {
+    for (const ignoreNameAlreadyUsedError of [false, true]) {
+      CloudTasksClient.prototype.createTask.mockClear()
+      const ret = await this.enqueueWithOutcomes(
+        { name: 'x', ignoreNameAlreadyUsedError },
+        unavailableError(), alreadyExistsError())
+      expect(ret).toEqual({ value: true, elapsedMs: 100 })
+      expect(CloudTasksClient.prototype.createTask).toHaveBeenCalledTimes(2)
+      expect(CloudTasksClient.prototype.createTask.mock.calls[1][0].task.name).toBe(NAMED_TASK)
+    }
+  }
+
+  async testEnqueueNamedTaskThatAlreadyExistsIsNotRetried () {
+    let ret = await this.enqueueWithOutcomes({ name: 'x' }, alreadyExistsError())
+    expect(ret.error).toBeInstanceOf(TaskNameAlreadyExistsError)
+    expect(ret.error.taskName).toBe('x')
+
+    ret = await this.enqueueWithOutcomes(
+      { name: 'x', ignoreNameAlreadyUsedError: true }, alreadyExistsError())
+    expect(ret).toEqual({ value: false, elapsedMs: 0 })
+    expect(CloudTasksClient.prototype.createTask).toHaveBeenCalledTimes(2)
   }
 
   async testEnqueueTaskWithDelay () {
