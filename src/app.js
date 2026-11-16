@@ -1,7 +1,7 @@
 import { makeService } from '@pbvision/fastify-firestore-service'
 
 import { port } from './port.js'
-import { isProd } from './utils.js'
+import { isLocalhost, isProd } from './utils.js'
 
 export async function makePBVService (components, customizePinoOpts) {
   return makeService({
@@ -18,7 +18,11 @@ export async function makePBVService (components, customizePinoOpts) {
     },
     logging: {
       customizePinoOpts,
-      reportErrorDetail: !isProd,
+      // a crash's text and stack go back to the caller only on localhost
+      // (where unit tests run too); dev serves partners and test accounts, so
+      // it gets the same generic crash response as prod. Logs and Sentry keep
+      // the full detail everywhere.
+      reportErrorDetail: isLocalhost,
       reportAllErrors: true,
       sentryDSN: process.env.SENTRY_DSN
     },
